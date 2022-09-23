@@ -24,8 +24,7 @@ namespace FileCabinetApp
 
         public int GetStat()
         {
-            // TODO
-            return 0;
+            return this._list.Count;
         }
     }
 }
