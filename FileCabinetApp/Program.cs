@@ -1,4 +1,6 @@
-﻿namespace FileCabinetApp
+﻿using System.Globalization;
+
+namespace FileCabinetApp
 {
     public static class Program
     {
@@ -16,12 +18,16 @@
         {
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("exit", Exit),
+            new Tuple<string, Action<string>>("stat", Stat),
+            new Tuple<string, Action<string>>("create", Create),
         };
 
         private static string[][] helpMessages = new string[][]
         {
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
+            new string[] { "stat", "shows statistics on record", "The 'stat' command shows statistics on record." },
+            new string[] { "create", "creates a new record", "The 'create' command creates a new record." },
         };
 
         public static void Main(string[] args)
@@ -103,6 +109,22 @@
             var recordsCount = Program.fileCabinetService.GetStat();
 
             Console.WriteLine($"{recordsCount} record(s).");
+        }
+
+        private static void Create(string parameters)
+        {
+            Console.Write("First name: ");
+            var firstName = Console.ReadLine();
+            Console.Write("Last name: ");
+            var lastName = Console.ReadLine();
+            Console.Write("Date of birth: ");
+            var date = Console.ReadLine();
+
+            var dateOfBirth = DateTime.Parse(date, CultureInfo.InvariantCulture);
+
+            var newRecordId = Program.fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth);
+
+            Console.WriteLine($"Record #{newRecordId} was created!");
         }
     }
 }
