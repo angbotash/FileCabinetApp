@@ -121,10 +121,19 @@ namespace FileCabinetApp
             var lastName = Console.ReadLine();
             Console.Write("Date of birth: ");
             var date = Console.ReadLine();
+            Console.Write("Area code: ");
+            var code = Console.ReadLine();
+            Console.Write("Amount of savings: ");
+            var amountOfSavings = Console.ReadLine();
+            Console.Write("Gender: ");
+            var genderString = Console.ReadLine();
 
             var dateOfBirth = DateTime.Parse(date, CultureInfo.InvariantCulture);
+            var areaCode = short.Parse(code, CultureInfo.InvariantCulture);
+            var savings = decimal.Parse(amountOfSavings, CultureInfo.InvariantCulture);
+            var gender = char.Parse(genderString);
 
-            var newRecordId = Program.fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth);
+            var newRecordId = Program.fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, areaCode, savings, gender);
 
             Console.WriteLine($"Record #{newRecordId} was created!");
         }
@@ -135,7 +144,13 @@ namespace FileCabinetApp
 
             foreach (var record in records)
             {
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}");
+                Console.WriteLine($"#{record.Id}, " +
+                    $"{record.FirstName}, " +
+                    $"{record.LastName}, " +
+                    $"{record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, " +
+                    $"+{record.AreaCode}, " +
+                    $"{record.Savings}, " +
+                    $"{record.Gender}.");
             }
         }
     }
