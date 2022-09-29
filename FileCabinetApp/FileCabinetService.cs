@@ -27,8 +27,14 @@ namespace FileCabinetApp
 
         public FileCabinetRecord[] GetRecords()
         {
-            // TODO
-            return Array.Empty<FileCabinetRecord>();
+            var records = new FileCabinetRecord[this._list.Count];
+
+            for (int i = 0; i < this._list.Count; i++)
+            {
+                records[i] = this._list[i];
+            }
+
+            return records;
         }
 
         public int GetStat()
