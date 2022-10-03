@@ -21,6 +21,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("list", List),
+            new Tuple<string, Action<string>>("edit", Edit),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -30,6 +31,7 @@ namespace FileCabinetApp
             new string[] { "stat", "shows statistics on record", "The 'stat' command shows statistics on record." },
             new string[] { "create", "creates a new record", "The 'create' command creates a new record." },
             new string[] { "list", "prints the list of all records", "The 'list' command prints the list of all records." },
+            new string[] { "edit", "edits a record", "The 'edit' command edits an existing record." },
         };
 
         public static void Main(string[] args)
@@ -143,6 +145,38 @@ namespace FileCabinetApp
             }
         }
 
+        private static void Edit(string parameters)
+        {
+            int id;
+
+            if (int.TryParse(parameters, out id) && id > 0)
+            {
+                var record = Program.fileCabinetService.GetRecord(id);
+
+                if (record is null)
+                {
+                    Console.WriteLine($"#{id} record is not found.");
+                    return;
+                }
+
+                var firstName = FirstNameCheck();
+                var lastName = LastNameCheck();
+                var dateOfBirth = DateOfBirthCheck();
+                var areaCode = AreaCodeCheck();
+                var savings = SavingsCheck();
+                var gender = GenderCheck();
+
+                Program.fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, areaCode, savings, gender);
+
+                Console.WriteLine($"Record #{id} is updated.");
+            }
+            else
+            {
+                Console.WriteLine("Please enter the Id of an existing record.");
+                return;
+            }
+        }
+
         // User input check methods
         private static string FirstNameCheck()
         {
@@ -199,7 +233,6 @@ namespace FileCabinetApp
             {
                 Console.Write("Date of birth: ");
                 var dateOfBirthString = Console.ReadLine();
-
                 correctDateFormat = DateTime.TryParse(dateOfBirthString, out dateOfBirth);
 
                 if (correctDateFormat && (dateOfBirth < new DateTime(1950, 1, 1) || dateOfBirth > DateTime.Today))
@@ -226,7 +259,6 @@ namespace FileCabinetApp
             {
                 Console.Write("Area code: ");
                 var areaCodeString = Console.ReadLine();
-
                 correctAreCodeFormat = short.TryParse(areaCodeString, out areaCode);
 
                 if (correctAreCodeFormat && areaCode < 0)
@@ -253,7 +285,6 @@ namespace FileCabinetApp
             {
                 Console.Write("Amount of savings: ");
                 var savingsString = Console.ReadLine();
-
                 correctSavingsFormat = decimal.TryParse(savingsString, out savings);
 
                 if (correctSavingsFormat && savings < 0)
@@ -280,7 +311,6 @@ namespace FileCabinetApp
             {
                 Console.Write("Gender: ");
                 var genderString = Console.ReadLine();
-
                 correctGenderFormat = char.TryParse(genderString, out gender);
 
                 if (correctGenderFormat)

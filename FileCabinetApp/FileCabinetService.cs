@@ -81,9 +81,73 @@ namespace FileCabinetApp
             return records;
         }
 
+        public FileCabinetRecord? GetRecord(int id)
+        {
+            var record = this._list.Where(x => x.Id == id).FirstOrDefault();
+
+            return record == null ? null : record;
+        }
+
         public int GetStat()
         {
             return this._list.Count;
+        }
+
+        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, short areaCode, decimal savings, char gender)
+        {
+            var record = this._list.Where(x => x.Id == id).FirstOrDefault();
+
+            if (record == null)
+            {
+                throw new ArgumentException($"There is no record with this Id - {id}");
+            }
+
+            if (string.IsNullOrWhiteSpace(firstName))
+            {
+                throw new ArgumentNullException(nameof(firstName), "First name cannot be null or white spase.");
+            }
+
+            if (firstName.Length < 2 || firstName.Length > 60)
+            {
+                throw new ArgumentException("First name cannot be shorter than 2 characters and longer than 60 characters.");
+            }
+
+            if (string.IsNullOrWhiteSpace(lastName))
+            {
+                throw new ArgumentNullException(nameof(lastName), "Last name cannot be null or white spase.");
+            }
+
+            if (lastName.Length < 2 || lastName.Length > 60)
+            {
+                throw new ArgumentException("Last name cannot be shorter than 2 characters and longer than 60 characters.");
+            }
+
+            if (dateOfBirth < new DateTime(1950, 1, 1) || dateOfBirth > DateTime.Today)
+            {
+                throw new ArgumentException("Date of birth cannot be earlier than 1-Jan-1950 or later than the current date.");
+            }
+
+            if (areaCode < 0)
+            {
+                throw new ArgumentException("Area code cannot be a negative number.");
+            }
+
+            if (savings < 0)
+            {
+                throw new ArgumentException("Savings cannot be a negative number.");
+            }
+
+            if (gender != 'F' && gender != 'M' && gender != 'N')
+            {
+                throw new ArgumentException("Gender can only be F, M or N.");
+            }
+
+            record.FirstName = firstName;
+            record.LastName = lastName;
+            record.DateOfBirth = dateOfBirth;
+            record.AreaCode = areaCode;
+            record.Savings = savings;
+            record.Gender = gender;
         }
     }
 }
