@@ -48,9 +48,7 @@ namespace FileCabinetApp
                 throw new ArgumentException("Savings cannot be a negative number.");
             }
 
-            var genderUpperCase = char.ToUpper(gender, CultureInfo.InvariantCulture);
-
-            if (genderUpperCase != 'F' || genderUpperCase != 'M' || genderUpperCase != 'N')
+            if (gender != 'F' && gender != 'M' && gender != 'N')
             {
                 throw new ArgumentException("Gender can only be F, M or N.");
             }

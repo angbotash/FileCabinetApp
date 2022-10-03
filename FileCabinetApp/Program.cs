@@ -115,23 +115,12 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            Console.Write("First name: ");
-            var firstName = Console.ReadLine();
-            Console.Write("Last name: ");
-            var lastName = Console.ReadLine();
-            Console.Write("Date of birth: ");
-            var date = Console.ReadLine();
-            Console.Write("Area code: ");
-            var code = Console.ReadLine();
-            Console.Write("Amount of savings: ");
-            var amountOfSavings = Console.ReadLine();
-            Console.Write("Gender: ");
-            var genderString = Console.ReadLine();
-
-            var dateOfBirth = DateTime.Parse(date, CultureInfo.InvariantCulture);
-            var areaCode = short.Parse(code, CultureInfo.InvariantCulture);
-            var savings = decimal.Parse(amountOfSavings, CultureInfo.InvariantCulture);
-            var gender = char.Parse(genderString);
+            var firstName = FirstNameCheck();
+            var lastName = LastNameCheck();
+            var dateOfBirth = DateOfBirthCheck();
+            var areaCode = AreaCodeCheck();
+            var savings = SavingsCheck();
+            var gender = GenderCheck();
 
             var newRecordId = Program.fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, areaCode, savings, gender);
 
@@ -152,6 +141,164 @@ namespace FileCabinetApp
                     $"{record.Savings}, " +
                     $"{record.Gender}.");
             }
+        }
+
+        // User input check methods
+        private static string FirstNameCheck()
+        {
+            string? firstName;
+
+            do
+            {
+                Console.Write("First name: ");
+                firstName = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(firstName))
+                {
+                    Console.WriteLine("Please enter a first name.");
+                }
+                else if (firstName.Length < 2 || firstName.Length > 60)
+                {
+                    Console.WriteLine("The first name should be 2-60 characters long.");
+                }
+            }
+            while (string.IsNullOrWhiteSpace(firstName) || (firstName.Length < 2 || firstName.Length > 60));
+
+            return firstName;
+        }
+
+        private static string LastNameCheck()
+        {
+            string? lasrName;
+
+            do
+            {
+                Console.Write("Last name: ");
+                lasrName = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(lasrName))
+                {
+                    Console.WriteLine("Please enter a last name.");
+                }
+                else if (lasrName.Length < 2 || lasrName.Length > 60)
+                {
+                    Console.WriteLine("The last name should be 2-60 characters long.");
+                }
+            }
+            while (string.IsNullOrWhiteSpace(lasrName) || (lasrName.Length < 2 || lasrName.Length > 60));
+
+            return lasrName;
+        }
+
+        private static DateTime DateOfBirthCheck()
+        {
+            DateTime dateOfBirth;
+            bool correctDateFormat;
+
+            do
+            {
+                Console.Write("Date of birth: ");
+                var dateOfBirthString = Console.ReadLine();
+
+                correctDateFormat = DateTime.TryParse(dateOfBirthString, out dateOfBirth);
+
+                if (correctDateFormat && (dateOfBirth < new DateTime(1950, 1, 1) || dateOfBirth > DateTime.Today))
+                {
+                    correctDateFormat = false;
+                    Console.WriteLine("The date of birth cannot be earlier than 1-Jan-1950 or later than the current date.");
+                }
+                else if (!correctDateFormat)
+                {
+                    Console.WriteLine("Please enter the date of birth in the correct format. Ex.: mm/dd/yyyy - 01/01/1973");
+                }
+            }
+            while (!correctDateFormat);
+
+            return dateOfBirth;
+        }
+
+        private static short AreaCodeCheck()
+        {
+            short areaCode;
+            bool correctAreCodeFormat;
+
+            do
+            {
+                Console.Write("Area code: ");
+                var areaCodeString = Console.ReadLine();
+
+                correctAreCodeFormat = short.TryParse(areaCodeString, out areaCode);
+
+                if (correctAreCodeFormat && areaCode < 0)
+                {
+                    correctAreCodeFormat = false;
+                    Console.WriteLine("The area code cannot be a negative number.");
+                }
+                else if (!correctAreCodeFormat)
+                {
+                    Console.WriteLine("Please enter an area code.");
+                }
+            }
+            while (!correctAreCodeFormat);
+
+            return areaCode;
+        }
+
+        private static decimal SavingsCheck()
+        {
+            decimal savings;
+            bool correctSavingsFormat;
+
+            do
+            {
+                Console.Write("Amount of savings: ");
+                var savingsString = Console.ReadLine();
+
+                correctSavingsFormat = decimal.TryParse(savingsString, out savings);
+
+                if (correctSavingsFormat && savings < 0)
+                {
+                    correctSavingsFormat = false;
+                    Console.WriteLine("The amount of savings cannot be a negative number.");
+                }
+                else if (!correctSavingsFormat)
+                {
+                    Console.WriteLine("Please enter an amount of savings.");
+                }
+            }
+            while (!correctSavingsFormat);
+
+            return savings;
+        }
+
+        private static char GenderCheck()
+        {
+            char gender;
+            bool correctGenderFormat;
+
+            do
+            {
+                Console.Write("Gender: ");
+                var genderString = Console.ReadLine();
+
+                correctGenderFormat = char.TryParse(genderString, out gender);
+
+                if (correctGenderFormat)
+                {
+                    if (gender != 'F' && gender != 'M' && gender != 'N')
+                    {
+                        correctGenderFormat = false;
+                        Console.WriteLine("The gender can only be F, M or N.");
+                    }
+                }
+                else if (!correctGenderFormat)
+                {
+                    Console.WriteLine("Please enter the gender in a correct format. Ex: 'F', 'M' or 'N'.");
+                }
+            }
+            while (!correctGenderFormat);
+
+            return gender;
         }
     }
 }
