@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,48 @@ namespace FileCabinetApp
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short areaCode, decimal savings, char gender)
         {
+            if (string.IsNullOrWhiteSpace(firstName))
+            {
+                throw new ArgumentNullException(nameof(firstName), "First name cannot be null or white spase.");
+            }
+
+            if (firstName.Length < 2 || firstName.Length > 60)
+            {
+                throw new ArgumentException("First name cannot be shorter than 2 characters and longer than 60 characters.");
+            }
+
+            if (string.IsNullOrWhiteSpace(lastName))
+            {
+                throw new ArgumentNullException(nameof(lastName), "Last name cannot be null or white spase.");
+            }
+
+            if (lastName.Length < 2 || lastName.Length > 60)
+            {
+                throw new ArgumentException("Last name cannot be shorter than 2 characters and longer than 60 characters.");
+            }
+
+            if (dateOfBirth < new DateTime(1950, 1, 1) || dateOfBirth > DateTime.Today)
+            {
+                throw new ArgumentException("Date of birth cannot be earlier than 1-Jan-1950 or later than the current date.");
+            }
+
+            if (areaCode < 0)
+            {
+                throw new ArgumentException("Area code cannot be a negative number.");
+            }
+
+            if (savings < 0)
+            {
+                throw new ArgumentException("Savings cannot be a negative number.");
+            }
+
+            var genderUpperCase = char.ToUpper(gender, CultureInfo.InvariantCulture);
+
+            if (genderUpperCase != 'F' || genderUpperCase != 'M' || genderUpperCase != 'N')
+            {
+                throw new ArgumentException("Gender can only be F, M or N.");
+            }
+
             var record = new FileCabinetRecord
             {
                 Id = this._list.Count + 1,
