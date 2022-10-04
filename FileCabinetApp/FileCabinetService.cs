@@ -12,6 +12,7 @@ namespace FileCabinetApp
         private readonly List<FileCabinetRecord> _list = new List<FileCabinetRecord>();
         private readonly Dictionary<string, List<FileCabinetRecord>> _firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> _lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<DateTime, List<FileCabinetRecord>> _dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short areaCode, decimal savings, char gender)
         {
@@ -68,6 +69,7 @@ namespace FileCabinetApp
 
             this.AddToFirstNameDictionary(record);
             this.AddToLastNameDictionary(record);
+            this.AddToDateOfBirthDictionary(record);
 
             this._list.Add(record);
 
@@ -160,6 +162,7 @@ namespace FileCabinetApp
 
             this.UpdateFirstNameDictionary(updatedRecord, record.FirstName);
             this.UpdateLastNameDictionary(updatedRecord, record.LastName);
+            this.UpdateDateOfBirthDictionary(updatedRecord, record.DateOfBirth);
 
             record.FirstName = firstName;
             record.LastName = lastName;
@@ -194,16 +197,23 @@ namespace FileCabinetApp
             }
 
             var lastNameUpperCase = lastName.ToUpperInvariant();
-            var records = this._list.Where(x => x.LastName.ToUpperInvariant() == lastNameUpperCase);
 
-            return records.ToArray();
+            if (this._lastNameDictionary.ContainsKey(lastNameUpperCase))
+            {
+                return this._lastNameDictionary[lastNameUpperCase].ToArray();
+            }
+
+            return Array.Empty<FileCabinetRecord>();
         }
 
         public FileCabinetRecord[] FindByDateOfBirth(DateTime dateOfBirth)
         {
-            var records = this._list.Where(x => x.DateOfBirth == dateOfBirth);
+            if (this._dateOfBirthDictionary.ContainsKey(dateOfBirth))
+            {
+                return this._dateOfBirthDictionary[dateOfBirth].ToArray();
+            }
 
-            return records.ToArray();
+            return Array.Empty<FileCabinetRecord>();
         }
 
         // Dictionary methods
@@ -297,6 +307,48 @@ namespace FileCabinetApp
                 {
                     this._lastNameDictionary[oldLastNameUpperCase].Remove(recordDictionary);
                     this.AddToLastNameDictionary(record);
+                }
+            }
+        }
+
+        private void AddToDateOfBirthDictionary(FileCabinetRecord record)
+        {
+            if (this._dateOfBirthDictionary.ContainsKey(record.DateOfBirth))
+            {
+                this._dateOfBirthDictionary[record.DateOfBirth].Add(record);
+            }
+            else
+            {
+                this._dateOfBirthDictionary.Add(record.DateOfBirth, new List<FileCabinetRecord>() { record });
+            }
+        }
+
+        private void UpdateDateOfBirthDictionary(FileCabinetRecord record, DateTime uneditedDateOfBirth)
+        {
+            if (uneditedDateOfBirth == record.DateOfBirth)
+            {
+                var recordDictionary = this._dateOfBirthDictionary[uneditedDateOfBirth]
+                    .FirstOrDefault(x => x.Id == record.Id);
+
+                if (recordDictionary != null)
+                {
+                    recordDictionary.FirstName = record.FirstName;
+                    recordDictionary.LastName = record.LastName;
+                    recordDictionary.DateOfBirth = record.DateOfBirth;
+                    recordDictionary.AreaCode = record.AreaCode;
+                    recordDictionary.Savings = record.Savings;
+                    recordDictionary.Gender = record.Gender;
+                }
+            }
+            else if (uneditedDateOfBirth != record.DateOfBirth)
+            {
+                var recordDictionary = this._dateOfBirthDictionary[uneditedDateOfBirth]
+                    .FirstOrDefault(x => x.Id == record.Id);
+
+                if (recordDictionary != null)
+                {
+                    this._dateOfBirthDictionary[uneditedDateOfBirth].Remove(recordDictionary);
+                    this.AddToDateOfBirthDictionary(record);
                 }
             }
         }
