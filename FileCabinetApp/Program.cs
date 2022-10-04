@@ -191,22 +191,22 @@ namespace FileCabinetApp
                 return;
             }
 
-            var searchCategory = searchData[0].ToLowerInvariant();
-            var recordData = searchData[1].ToLowerInvariant();
+            var searchCategory = searchData[0].ToUpperInvariant();
+            var recordData = searchData[1].ToUpperInvariant();
 
             switch (searchCategory)
             {
-                case "firstname":
+                case "FIRSTNAME":
                     var recordsByFirstName = Program.fileCabinetService.FindByFirstName(recordData);
                     PrintRecords(recordsByFirstName);
                     break;
 
-                case "lastname":
+                case "LASTNAME":
                     var recordsByLastName = Program.fileCabinetService.FindByLastName(recordData);
                     PrintRecords(recordsByLastName);
                     break;
 
-                case "dateofbirth":
+                case "DATEOFBIRTH":
                     DateTime dateOfBirth;
 
                     if (!DateTime.TryParse(recordData, out dateOfBirth))
