@@ -11,6 +11,7 @@ namespace FileCabinetApp
     {
         private readonly List<FileCabinetRecord> _list = new List<FileCabinetRecord>();
         private readonly Dictionary<string, List<FileCabinetRecord>> _firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> _lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short areaCode, decimal savings, char gender)
         {
@@ -66,6 +67,7 @@ namespace FileCabinetApp
             };
 
             this.AddToFirstNameDictionary(record);
+            this.AddToLastNameDictionary(record);
 
             this._list.Add(record);
 
@@ -157,6 +159,7 @@ namespace FileCabinetApp
             };
 
             this.UpdateFirstNameDictionary(updatedRecord, record.FirstName);
+            this.UpdateLastNameDictionary(updatedRecord, record.LastName);
 
             record.FirstName = firstName;
             record.LastName = lastName;
@@ -247,6 +250,53 @@ namespace FileCabinetApp
                 {
                     this._firstNameDictionary[oldFirstNameUpperCase].Remove(recordDictionary);
                     this.AddToFirstNameDictionary(record);
+                }
+            }
+        }
+
+        private void AddToLastNameDictionary(FileCabinetRecord record)
+        {
+            var lastNameUpperCase = record.LastName.ToUpperInvariant();
+
+            if (this._lastNameDictionary.ContainsKey(lastNameUpperCase))
+            {
+                this._lastNameDictionary[record.LastName].Add(record);
+            }
+            else
+            {
+                this._lastNameDictionary.Add(lastNameUpperCase, new List<FileCabinetRecord>() { record });
+            }
+        }
+
+        private void UpdateLastNameDictionary(FileCabinetRecord record, string uneditedLastname)
+        {
+            var oldLastNameUpperCase = uneditedLastname.ToUpperInvariant();
+            var newNameUpperCase = record.LastName.ToUpperInvariant();
+
+            if (oldLastNameUpperCase == newNameUpperCase)
+            {
+                var recordDictionary = this._lastNameDictionary[oldLastNameUpperCase]
+                    .FirstOrDefault(x => x.Id == record.Id);
+
+                if (recordDictionary != null)
+                {
+                    recordDictionary.FirstName = record.FirstName;
+                    recordDictionary.LastName = record.LastName;
+                    recordDictionary.DateOfBirth = record.DateOfBirth;
+                    recordDictionary.AreaCode = record.AreaCode;
+                    recordDictionary.Savings = record.Savings;
+                    recordDictionary.Gender = record.Gender;
+                }
+            }
+            else if (oldLastNameUpperCase != newNameUpperCase)
+            {
+                var recordDictionary = this._lastNameDictionary[oldLastNameUpperCase]
+                    .FirstOrDefault(x => x.Id == record.Id);
+
+                if (recordDictionary != null)
+                {
+                    this._lastNameDictionary[oldLastNameUpperCase].Remove(recordDictionary);
+                    this.AddToLastNameDictionary(record);
                 }
             }
         }
