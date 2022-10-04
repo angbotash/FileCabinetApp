@@ -15,7 +15,7 @@ namespace FileCabinetApp
         {
             if (string.IsNullOrWhiteSpace(firstName))
             {
-                throw new ArgumentNullException(nameof(firstName), "First name cannot be null or white spase.");
+                throw new ArgumentNullException(nameof(firstName), "First name cannot be null or white space.");
             }
 
             if (firstName.Length < 2 || firstName.Length > 60)
@@ -25,7 +25,7 @@ namespace FileCabinetApp
 
             if (string.IsNullOrWhiteSpace(lastName))
             {
-                throw new ArgumentNullException(nameof(lastName), "Last name cannot be null or white spase.");
+                throw new ArgumentNullException(nameof(lastName), "Last name cannot be null or white space.");
             }
 
             if (lastName.Length < 2 || lastName.Length > 60)
@@ -83,9 +83,9 @@ namespace FileCabinetApp
 
         public FileCabinetRecord? GetRecord(int id)
         {
-            var record = this._list.Where(x => x.Id == id).FirstOrDefault();
+            var record = this._list.FirstOrDefault(x => x.Id == id);
 
-            return record == null ? null : record;
+            return record;
         }
 
         public int GetStat()
@@ -95,16 +95,16 @@ namespace FileCabinetApp
 
         public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, short areaCode, decimal savings, char gender)
         {
-            var record = this._list.Where(x => x.Id == id).FirstOrDefault();
+            var record = this._list.FirstOrDefault(x => x.Id == id);
 
-            if (record == null)
+            if (record is null)
             {
                 throw new ArgumentException($"There is no record with this Id - {id}");
             }
 
             if (string.IsNullOrWhiteSpace(firstName))
             {
-                throw new ArgumentNullException(nameof(firstName), "First name cannot be null or white spase.");
+                throw new ArgumentNullException(nameof(firstName), "First name cannot be null or white space.");
             }
 
             if (firstName.Length < 2 || firstName.Length > 60)
@@ -114,7 +114,7 @@ namespace FileCabinetApp
 
             if (string.IsNullOrWhiteSpace(lastName))
             {
-                throw new ArgumentNullException(nameof(lastName), "Last name cannot be null or white spase.");
+                throw new ArgumentNullException(nameof(lastName), "Last name cannot be null or white space.");
             }
 
             if (lastName.Length < 2 || lastName.Length > 60)
@@ -148,6 +148,19 @@ namespace FileCabinetApp
             record.AreaCode = areaCode;
             record.Savings = savings;
             record.Gender = gender;
+        }
+
+        public FileCabinetRecord[] FindByFirstName(string firstName)
+        {
+            if (string.IsNullOrWhiteSpace(firstName))
+            {
+                throw new ArgumentNullException(nameof(firstName), "First name cannot be null or white space.");
+            }
+
+            var firstNameLowerCase = firstName.ToLowerInvariant();
+            var records = this._list.Where(x => x.FirstName.ToLowerInvariant() == firstNameLowerCase);
+
+            return records.ToArray();
         }
     }
 }

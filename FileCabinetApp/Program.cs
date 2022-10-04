@@ -22,6 +22,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
+            new Tuple<string, Action<string>>("find", Find),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -32,6 +33,7 @@ namespace FileCabinetApp
             new string[] { "create", "creates a new record", "The 'create' command creates a new record." },
             new string[] { "list", "prints the list of all records", "The 'list' command prints the list of all records." },
             new string[] { "edit", "edits a record", "The 'edit' command edits an existing record." },
+            new string[] { "find", "finds records", "The 'find' command finds existing records." },
         };
 
         public static void Main(string[] args)
@@ -133,16 +135,7 @@ namespace FileCabinetApp
         {
             var records = Program.fileCabinetService.GetRecords();
 
-            foreach (var record in records)
-            {
-                Console.WriteLine($"#{record.Id}, " +
-                    $"{record.FirstName}, " +
-                    $"{record.LastName}, " +
-                    $"{record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, " +
-                    $"+{record.AreaCode}, " +
-                    $"{record.Savings}, " +
-                    $"{record.Gender}.");
-            }
+            PrintRecords(records);
         }
 
         private static void Edit(string parameters)
@@ -151,7 +144,7 @@ namespace FileCabinetApp
 
             if (int.TryParse(parameters, out id) && id > 0)
             {
-                var record = Program.fileCabinetService.GetRecord(id);
+                var record = fileCabinetService.GetRecord(id);
 
                 if (record is null)
                 {
@@ -173,7 +166,28 @@ namespace FileCabinetApp
             else
             {
                 Console.WriteLine("Please enter the Id of an existing record.");
+            }
+        }
+
+        private static void Find(string parameters)
+        {
+            var searchData = parameters.Split(' ', 2);
+
+            if (string.IsNullOrWhiteSpace(parameters) || (string.IsNullOrWhiteSpace(searchData[0]) || string.IsNullOrWhiteSpace(searchData[1])))
+            {
+                Console.WriteLine("Please enter a search category and a record data.");
                 return;
+            }
+
+            var searchCategory = searchData[0].ToLowerInvariant();
+            var recordData = searchData[1].ToLowerInvariant();
+
+            switch (searchCategory)
+            {
+                case "firstname":
+                    var records = Program.fileCabinetService.FindByFirstName(recordData);
+                    PrintRecords(records);
+                    break;
             }
         }
 
@@ -203,25 +217,25 @@ namespace FileCabinetApp
 
         private static string LastNameCheck()
         {
-            string? lasrName;
+            string? lastName;
 
             do
             {
                 Console.Write("Last name: ");
-                lasrName = Console.ReadLine();
+                lastName = Console.ReadLine();
 
-                if (string.IsNullOrWhiteSpace(lasrName))
+                if (string.IsNullOrWhiteSpace(lastName))
                 {
                     Console.WriteLine("Please enter a last name.");
                 }
-                else if (lasrName.Length < 2 || lasrName.Length > 60)
+                else if (lastName.Length < 2 || lastName.Length > 60)
                 {
                     Console.WriteLine("The last name should be 2-60 characters long.");
                 }
             }
-            while (string.IsNullOrWhiteSpace(lasrName) || (lasrName.Length < 2 || lasrName.Length > 60));
+            while (string.IsNullOrWhiteSpace(lastName) || (lastName.Length < 2 || lastName.Length > 60));
 
-            return lasrName;
+            return lastName;
         }
 
         private static DateTime DateOfBirthCheck()
@@ -329,6 +343,27 @@ namespace FileCabinetApp
             while (!correctGenderFormat);
 
             return gender;
+        }
+
+        // Prints records
+        private static void PrintRecords(FileCabinetRecord[] records)
+        {
+            if (records.Length == 0)
+            {
+                Console.WriteLine("No records found.");
+                return;
+            }
+
+            foreach (var record in records)
+            {
+                Console.WriteLine($"#{record.Id}, " +
+                                  $"{record.FirstName}, " +
+                                  $"{record.LastName}, " +
+                                  $"{record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, " +
+                                  $"+{record.AreaCode}, " +
+                                  $"{record.Savings}, " +
+                                  $"{record.Gender}.");
+            }
         }
     }
 }
