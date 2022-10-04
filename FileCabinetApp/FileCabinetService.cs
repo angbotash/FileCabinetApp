@@ -175,5 +175,12 @@ namespace FileCabinetApp
 
             return records.ToArray();
         }
+
+        public FileCabinetRecord[] FindByDateOfBirth(DateTime dateOfBirth)
+        {
+            var records = this._list.Where(x => x.DateOfBirth == dateOfBirth);
+
+            return records.ToArray();
+        }
     }
 }

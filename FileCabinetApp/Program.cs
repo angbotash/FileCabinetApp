@@ -33,7 +33,13 @@ namespace FileCabinetApp
             new string[] { "create", "creates a new record", "The 'create' command creates a new record." },
             new string[] { "list", "prints the list of all records", "The 'list' command prints the list of all records." },
             new string[] { "edit", "edits a record", "The 'edit' command edits an existing record." },
-            new string[] { "find", "finds records", "The 'find' command finds existing records." },
+            new string[]
+            {
+                "find", "finds records",
+                "The 'find firstname 'first name'' command finds existing records by the first name.\n" +
+                "The 'find lastname 'last name'' command finds existing records by the last name.\n" +
+                "The 'find dateofbirth 'date of birth'' command finds existing records by the date of birth.",
+            },
         };
 
         public static void Main(string[] args)
@@ -173,7 +179,13 @@ namespace FileCabinetApp
         {
             var searchData = parameters.Split(' ', 2);
 
-            if (string.IsNullOrWhiteSpace(parameters) || (string.IsNullOrWhiteSpace(searchData[0]) || string.IsNullOrWhiteSpace(searchData[1])))
+            if (string.IsNullOrWhiteSpace(parameters) || searchData.Length != 2)
+            {
+                Console.WriteLine("Please enter a search category and a record data.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(searchData[0]) || string.IsNullOrWhiteSpace(searchData[1]))
             {
                 Console.WriteLine("Please enter a search category and a record data.");
                 return;
@@ -188,9 +200,27 @@ namespace FileCabinetApp
                     var recordsByFirstName = Program.fileCabinetService.FindByFirstName(recordData);
                     PrintRecords(recordsByFirstName);
                     break;
+
                 case "lastname":
                     var recordsByLastName = Program.fileCabinetService.FindByLastName(recordData);
                     PrintRecords(recordsByLastName);
+                    break;
+
+                case "dateofbirth":
+                    DateTime dateOfBirth;
+
+                    if (!DateTime.TryParse(recordData, out dateOfBirth))
+                    {
+                        Console.WriteLine("Please enter the date of birth in the correct format. Ex.: mm/dd/yyyy - 01/01/1973");
+                        break;
+                    }
+
+                    var recordsByDateOfBirth = Program.fileCabinetService.FindByDateOfBirth(dateOfBirth);
+                    PrintRecords(recordsByDateOfBirth);
+                    break;
+
+                default:
+                    Console.WriteLine("Please enter a search category and a record data.");
                     break;
             }
         }
