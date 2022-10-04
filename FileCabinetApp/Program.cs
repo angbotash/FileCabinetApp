@@ -185,8 +185,12 @@ namespace FileCabinetApp
             switch (searchCategory)
             {
                 case "firstname":
-                    var records = Program.fileCabinetService.FindByFirstName(recordData);
-                    PrintRecords(records);
+                    var recordsByFirstName = Program.fileCabinetService.FindByFirstName(recordData);
+                    PrintRecords(recordsByFirstName);
+                    break;
+                case "lastname":
+                    var recordsByLastName = Program.fileCabinetService.FindByLastName(recordData);
+                    PrintRecords(recordsByLastName);
                     break;
             }
         }

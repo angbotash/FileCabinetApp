@@ -162,5 +162,18 @@ namespace FileCabinetApp
 
             return records.ToArray();
         }
+
+        public FileCabinetRecord[] FindByLastName(string lastName)
+        {
+            if (string.IsNullOrWhiteSpace(lastName))
+            {
+                throw new ArgumentNullException(nameof(lastName), "Last name cannot be null or white space.");
+            }
+
+            var lastNameLowerCase = lastName.ToLowerInvariant();
+            var records = this._list.Where(x => x.LastName.ToLowerInvariant() == lastNameLowerCase);
+
+            return records.ToArray();
+        }
     }
 }
