@@ -10,12 +10,15 @@ namespace FileCabinetApp
     public class FileCabinetService
     {
         private readonly List<FileCabinetRecord> _list = new List<FileCabinetRecord>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> _firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> _lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<DateTime, List<FileCabinetRecord>> _dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short areaCode, decimal savings, char gender)
         {
             if (string.IsNullOrWhiteSpace(firstName))
             {
-                throw new ArgumentNullException(nameof(firstName), "First name cannot be null or white spase.");
+                throw new ArgumentNullException(nameof(firstName), "First name cannot be null or white space.");
             }
 
             if (firstName.Length < 2 || firstName.Length > 60)
@@ -25,7 +28,7 @@ namespace FileCabinetApp
 
             if (string.IsNullOrWhiteSpace(lastName))
             {
-                throw new ArgumentNullException(nameof(lastName), "Last name cannot be null or white spase.");
+                throw new ArgumentNullException(nameof(lastName), "Last name cannot be null or white space.");
             }
 
             if (lastName.Length < 2 || lastName.Length > 60)
@@ -64,6 +67,10 @@ namespace FileCabinetApp
                 Gender = gender,
             };
 
+            this.AddToFirstNameDictionary(record);
+            this.AddToLastNameDictionary(record);
+            this.AddToDateOfBirthDictionary(record);
+
             this._list.Add(record);
 
             return record.Id;
@@ -83,9 +90,9 @@ namespace FileCabinetApp
 
         public FileCabinetRecord? GetRecord(int id)
         {
-            var record = this._list.Where(x => x.Id == id).FirstOrDefault();
+            var record = this._list.FirstOrDefault(x => x.Id == id);
 
-            return record == null ? null : record;
+            return record;
         }
 
         public int GetStat()
@@ -95,16 +102,16 @@ namespace FileCabinetApp
 
         public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, short areaCode, decimal savings, char gender)
         {
-            var record = this._list.Where(x => x.Id == id).FirstOrDefault();
+            var record = this._list.FirstOrDefault(x => x.Id == id);
 
-            if (record == null)
+            if (record is null)
             {
                 throw new ArgumentException($"There is no record with this Id - {id}");
             }
 
             if (string.IsNullOrWhiteSpace(firstName))
             {
-                throw new ArgumentNullException(nameof(firstName), "First name cannot be null or white spase.");
+                throw new ArgumentNullException(nameof(firstName), "First name cannot be null or white space.");
             }
 
             if (firstName.Length < 2 || firstName.Length > 60)
@@ -114,7 +121,7 @@ namespace FileCabinetApp
 
             if (string.IsNullOrWhiteSpace(lastName))
             {
-                throw new ArgumentNullException(nameof(lastName), "Last name cannot be null or white spase.");
+                throw new ArgumentNullException(nameof(lastName), "Last name cannot be null or white space.");
             }
 
             if (lastName.Length < 2 || lastName.Length > 60)
@@ -142,12 +149,208 @@ namespace FileCabinetApp
                 throw new ArgumentException("Gender can only be F, M or N.");
             }
 
+            var updatedRecord = new FileCabinetRecord()
+            {
+                Id = id,
+                FirstName = firstName,
+                LastName = lastName,
+                DateOfBirth = dateOfBirth,
+                AreaCode = areaCode,
+                Savings = savings,
+                Gender = gender,
+            };
+
+            this.UpdateFirstNameDictionary(updatedRecord, record.FirstName);
+            this.UpdateLastNameDictionary(updatedRecord, record.LastName);
+            this.UpdateDateOfBirthDictionary(updatedRecord, record.DateOfBirth);
+
             record.FirstName = firstName;
             record.LastName = lastName;
             record.DateOfBirth = dateOfBirth;
             record.AreaCode = areaCode;
             record.Savings = savings;
             record.Gender = gender;
+        }
+
+        public FileCabinetRecord[] FindByFirstName(string firstName)
+        {
+            if (string.IsNullOrWhiteSpace(firstName))
+            {
+                throw new ArgumentNullException(nameof(firstName), "First name cannot be null or white space.");
+            }
+
+            var firstNameUpperCase = firstName.ToUpperInvariant();
+
+            if (this._firstNameDictionary.ContainsKey(firstNameUpperCase))
+            {
+                return this._firstNameDictionary[firstNameUpperCase].ToArray();
+            }
+
+            return Array.Empty<FileCabinetRecord>();
+        }
+
+        public FileCabinetRecord[] FindByLastName(string lastName)
+        {
+            if (string.IsNullOrWhiteSpace(lastName))
+            {
+                throw new ArgumentNullException(nameof(lastName), "Last name cannot be null or white space.");
+            }
+
+            var lastNameUpperCase = lastName.ToUpperInvariant();
+
+            if (this._lastNameDictionary.ContainsKey(lastNameUpperCase))
+            {
+                return this._lastNameDictionary[lastNameUpperCase].ToArray();
+            }
+
+            return Array.Empty<FileCabinetRecord>();
+        }
+
+        public FileCabinetRecord[] FindByDateOfBirth(DateTime dateOfBirth)
+        {
+            if (this._dateOfBirthDictionary.ContainsKey(dateOfBirth))
+            {
+                return this._dateOfBirthDictionary[dateOfBirth].ToArray();
+            }
+
+            return Array.Empty<FileCabinetRecord>();
+        }
+
+        // Dictionary methods
+        private void AddToFirstNameDictionary(FileCabinetRecord record)
+        {
+            var firstNameUpperCase = record.FirstName.ToUpperInvariant();
+
+            if (this._firstNameDictionary.ContainsKey(firstNameUpperCase))
+            {
+                this._firstNameDictionary[record.FirstName].Add(record);
+            }
+            else
+            {
+                this._firstNameDictionary.Add(firstNameUpperCase, new List<FileCabinetRecord>() { record });
+            }
+        }
+
+        private void UpdateFirstNameDictionary(FileCabinetRecord record, string uneditedFirstname)
+        {
+            var oldFirstNameUpperCase = uneditedFirstname.ToUpperInvariant();
+            var newNameUpperCase = record.FirstName.ToUpperInvariant();
+
+            if (oldFirstNameUpperCase == newNameUpperCase)
+            {
+                var recordDictionary = this._firstNameDictionary[oldFirstNameUpperCase]
+                    .FirstOrDefault(x => x.Id == record.Id);
+
+                if (recordDictionary != null)
+                {
+                    recordDictionary.FirstName = record.FirstName;
+                    recordDictionary.LastName = record.LastName;
+                    recordDictionary.DateOfBirth = record.DateOfBirth;
+                    recordDictionary.AreaCode = record.AreaCode;
+                    recordDictionary.Savings = record.Savings;
+                    recordDictionary.Gender = record.Gender;
+                }
+            }
+            else if (oldFirstNameUpperCase != newNameUpperCase)
+            {
+                var recordDictionary = this._firstNameDictionary[oldFirstNameUpperCase]
+                    .FirstOrDefault(x => x.Id == record.Id);
+
+                if (recordDictionary != null)
+                {
+                    this._firstNameDictionary[oldFirstNameUpperCase].Remove(recordDictionary);
+                    this.AddToFirstNameDictionary(record);
+                }
+            }
+        }
+
+        private void AddToLastNameDictionary(FileCabinetRecord record)
+        {
+            var lastNameUpperCase = record.LastName.ToUpperInvariant();
+
+            if (this._lastNameDictionary.ContainsKey(lastNameUpperCase))
+            {
+                this._lastNameDictionary[record.LastName].Add(record);
+            }
+            else
+            {
+                this._lastNameDictionary.Add(lastNameUpperCase, new List<FileCabinetRecord>() { record });
+            }
+        }
+
+        private void UpdateLastNameDictionary(FileCabinetRecord record, string uneditedLastname)
+        {
+            var oldLastNameUpperCase = uneditedLastname.ToUpperInvariant();
+            var newNameUpperCase = record.LastName.ToUpperInvariant();
+
+            if (oldLastNameUpperCase == newNameUpperCase)
+            {
+                var recordDictionary = this._lastNameDictionary[oldLastNameUpperCase]
+                    .FirstOrDefault(x => x.Id == record.Id);
+
+                if (recordDictionary != null)
+                {
+                    recordDictionary.FirstName = record.FirstName;
+                    recordDictionary.LastName = record.LastName;
+                    recordDictionary.DateOfBirth = record.DateOfBirth;
+                    recordDictionary.AreaCode = record.AreaCode;
+                    recordDictionary.Savings = record.Savings;
+                    recordDictionary.Gender = record.Gender;
+                }
+            }
+            else if (oldLastNameUpperCase != newNameUpperCase)
+            {
+                var recordDictionary = this._lastNameDictionary[oldLastNameUpperCase]
+                    .FirstOrDefault(x => x.Id == record.Id);
+
+                if (recordDictionary != null)
+                {
+                    this._lastNameDictionary[oldLastNameUpperCase].Remove(recordDictionary);
+                    this.AddToLastNameDictionary(record);
+                }
+            }
+        }
+
+        private void AddToDateOfBirthDictionary(FileCabinetRecord record)
+        {
+            if (this._dateOfBirthDictionary.ContainsKey(record.DateOfBirth))
+            {
+                this._dateOfBirthDictionary[record.DateOfBirth].Add(record);
+            }
+            else
+            {
+                this._dateOfBirthDictionary.Add(record.DateOfBirth, new List<FileCabinetRecord>() { record });
+            }
+        }
+
+        private void UpdateDateOfBirthDictionary(FileCabinetRecord record, DateTime uneditedDateOfBirth)
+        {
+            if (uneditedDateOfBirth == record.DateOfBirth)
+            {
+                var recordDictionary = this._dateOfBirthDictionary[uneditedDateOfBirth]
+                    .FirstOrDefault(x => x.Id == record.Id);
+
+                if (recordDictionary != null)
+                {
+                    recordDictionary.FirstName = record.FirstName;
+                    recordDictionary.LastName = record.LastName;
+                    recordDictionary.DateOfBirth = record.DateOfBirth;
+                    recordDictionary.AreaCode = record.AreaCode;
+                    recordDictionary.Savings = record.Savings;
+                    recordDictionary.Gender = record.Gender;
+                }
+            }
+            else if (uneditedDateOfBirth != record.DateOfBirth)
+            {
+                var recordDictionary = this._dateOfBirthDictionary[uneditedDateOfBirth]
+                    .FirstOrDefault(x => x.Id == record.Id);
+
+                if (recordDictionary != null)
+                {
+                    this._dateOfBirthDictionary[uneditedDateOfBirth].Remove(recordDictionary);
+                    this.AddToDateOfBirthDictionary(record);
+                }
+            }
         }
     }
 }

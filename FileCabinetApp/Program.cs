@@ -22,6 +22,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
+            new Tuple<string, Action<string>>("find", Find),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -32,6 +33,13 @@ namespace FileCabinetApp
             new string[] { "create", "creates a new record", "The 'create' command creates a new record." },
             new string[] { "list", "prints the list of all records", "The 'list' command prints the list of all records." },
             new string[] { "edit", "edits a record", "The 'edit' command edits an existing record." },
+            new string[]
+            {
+                "find", "finds records",
+                "The 'find firstname 'first name'' command finds existing records by the first name.\n" +
+                "The 'find lastname 'last name'' command finds existing records by the last name.\n" +
+                "The 'find dateofbirth 'date of birth'' command finds existing records by the date of birth.",
+            },
         };
 
         public static void Main(string[] args)
@@ -133,16 +141,7 @@ namespace FileCabinetApp
         {
             var records = Program.fileCabinetService.GetRecords();
 
-            foreach (var record in records)
-            {
-                Console.WriteLine($"#{record.Id}, " +
-                    $"{record.FirstName}, " +
-                    $"{record.LastName}, " +
-                    $"{record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, " +
-                    $"+{record.AreaCode}, " +
-                    $"{record.Savings}, " +
-                    $"{record.Gender}.");
-            }
+            PrintRecords(records);
         }
 
         private static void Edit(string parameters)
@@ -151,7 +150,7 @@ namespace FileCabinetApp
 
             if (int.TryParse(parameters, out id) && id > 0)
             {
-                var record = Program.fileCabinetService.GetRecord(id);
+                var record = fileCabinetService.GetRecord(id);
 
                 if (record is null)
                 {
@@ -173,7 +172,56 @@ namespace FileCabinetApp
             else
             {
                 Console.WriteLine("Please enter the Id of an existing record.");
+            }
+        }
+
+        private static void Find(string parameters)
+        {
+            var searchData = parameters.Split(' ', 2);
+
+            if (string.IsNullOrWhiteSpace(parameters) || searchData.Length != 2)
+            {
+                Console.WriteLine("Please enter a search category and a record data.");
                 return;
+            }
+
+            if (string.IsNullOrWhiteSpace(searchData[0]) || string.IsNullOrWhiteSpace(searchData[1]))
+            {
+                Console.WriteLine("Please enter a search category and a record data.");
+                return;
+            }
+
+            var searchCategory = searchData[0].ToUpperInvariant();
+            var recordData = searchData[1].ToUpperInvariant();
+
+            switch (searchCategory)
+            {
+                case "FIRSTNAME":
+                    var recordsByFirstName = Program.fileCabinetService.FindByFirstName(recordData);
+                    PrintRecords(recordsByFirstName);
+                    break;
+
+                case "LASTNAME":
+                    var recordsByLastName = Program.fileCabinetService.FindByLastName(recordData);
+                    PrintRecords(recordsByLastName);
+                    break;
+
+                case "DATEOFBIRTH":
+                    DateTime dateOfBirth;
+
+                    if (!DateTime.TryParse(recordData, out dateOfBirth))
+                    {
+                        Console.WriteLine("Please enter the date of birth in the correct format. Ex.: mm/dd/yyyy - 01/01/1973");
+                        break;
+                    }
+
+                    var recordsByDateOfBirth = Program.fileCabinetService.FindByDateOfBirth(dateOfBirth);
+                    PrintRecords(recordsByDateOfBirth);
+                    break;
+
+                default:
+                    Console.WriteLine("Please enter a search category and a record data.");
+                    break;
             }
         }
 
@@ -203,25 +251,25 @@ namespace FileCabinetApp
 
         private static string LastNameCheck()
         {
-            string? lasrName;
+            string? lastName;
 
             do
             {
                 Console.Write("Last name: ");
-                lasrName = Console.ReadLine();
+                lastName = Console.ReadLine();
 
-                if (string.IsNullOrWhiteSpace(lasrName))
+                if (string.IsNullOrWhiteSpace(lastName))
                 {
                     Console.WriteLine("Please enter a last name.");
                 }
-                else if (lasrName.Length < 2 || lasrName.Length > 60)
+                else if (lastName.Length < 2 || lastName.Length > 60)
                 {
                     Console.WriteLine("The last name should be 2-60 characters long.");
                 }
             }
-            while (string.IsNullOrWhiteSpace(lasrName) || (lasrName.Length < 2 || lasrName.Length > 60));
+            while (string.IsNullOrWhiteSpace(lastName) || (lastName.Length < 2 || lastName.Length > 60));
 
-            return lasrName;
+            return lastName;
         }
 
         private static DateTime DateOfBirthCheck()
@@ -329,6 +377,27 @@ namespace FileCabinetApp
             while (!correctGenderFormat);
 
             return gender;
+        }
+
+        // Prints records
+        private static void PrintRecords(FileCabinetRecord[] records)
+        {
+            if (records.Length == 0)
+            {
+                Console.WriteLine("No records found.");
+                return;
+            }
+
+            foreach (var record in records)
+            {
+                Console.WriteLine($"#{record.Id}, " +
+                                  $"{record.FirstName}, " +
+                                  $"{record.LastName}, " +
+                                  $"{record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, " +
+                                  $"+{record.AreaCode}, " +
+                                  $"{record.Savings}, " +
+                                  $"{record.Gender}.");
+            }
         }
     }
 }
