@@ -9,12 +9,17 @@ namespace FileCabinetApp
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
+        private const int MinNameLength = 2;
+        private const int MaxNameLength = 60;
+        private const char GenderFemale = 'F';
+        private const char GenderMale = 'M';
+        private const char GenderNotSpecified = 'N';
 
-        private static readonly FileCabinetService fileCabinetService = new FileCabinetService();
+        private static readonly FileCabinetService FileCabinetService = new ();
 
         private static bool isRunning = true;
 
-        private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
+        private static Tuple<string, Action<string>>[] commands =
         {
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("exit", Exit),
@@ -25,15 +30,15 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("find", Find),
         };
 
-        private static string[][] helpMessages = new string[][]
+        private static string[][] helpMessages =
         {
-            new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
-            new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
-            new string[] { "stat", "shows statistics on record", "The 'stat' command shows statistics on record." },
-            new string[] { "create", "creates a new record", "The 'create' command creates a new record." },
-            new string[] { "list", "prints the list of all records", "The 'list' command prints the list of all records." },
-            new string[] { "edit", "edits a record", "The 'edit' command edits an existing record." },
-            new string[]
+            new[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
+            new[] { "exit", "exits the application", "The 'exit' command exits the application." },
+            new[] { "stat", "shows statistics on record", "The 'stat' command shows statistics on record." },
+            new[] { "create", "creates a new record", "The 'create' command creates a new record." },
+            new[] { "list", "prints the list of all records", "The 'list' command prints the list of all records." },
+            new[] { "edit", "edits a record", "The 'edit' command edits an existing record." },
+            new[]
             {
                 "find", "finds records",
                 "The 'find firstname 'first name'' command finds existing records by the first name.\n" +
@@ -44,21 +49,21 @@ namespace FileCabinetApp
 
         public static void Main(string[] args)
         {
-            Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            Console.WriteLine(Program.HintMessage);
+            Console.WriteLine($"File Cabinet Application, developed by {DeveloperName}");
+            Console.WriteLine(HintMessage);
             Console.WriteLine();
 
             do
             {
                 Console.Write("> ");
                 var line = Console.ReadLine();
-                var inputs = line != null ? line.Split(' ', 2) : new string[] { string.Empty, string.Empty };
+                var inputs = line != null ? line.Split(' ', 2) : new[] { string.Empty, string.Empty };
                 const int commandIndex = 0;
                 var command = inputs[commandIndex];
 
                 if (string.IsNullOrEmpty(command))
                 {
-                    Console.WriteLine(Program.HintMessage);
+                    Console.WriteLine(HintMessage);
                     continue;
                 }
 
@@ -87,10 +92,10 @@ namespace FileCabinetApp
         {
             if (!string.IsNullOrEmpty(parameters))
             {
-                var index = Array.FindIndex(helpMessages, 0, helpMessages.Length, i => string.Equals(i[Program.CommandHelpIndex], parameters, StringComparison.InvariantCultureIgnoreCase));
+                var index = Array.FindIndex(helpMessages, 0, helpMessages.Length, i => string.Equals(i[CommandHelpIndex], parameters, StringComparison.InvariantCultureIgnoreCase));
                 if (index >= 0)
                 {
-                    Console.WriteLine(helpMessages[index][Program.ExplanationHelpIndex]);
+                    Console.WriteLine(helpMessages[index][ExplanationHelpIndex]);
                 }
                 else
                 {
@@ -103,7 +108,7 @@ namespace FileCabinetApp
 
                 foreach (var helpMessage in helpMessages)
                 {
-                    Console.WriteLine("\t{0}\t- {1}", helpMessage[Program.CommandHelpIndex], helpMessage[Program.DescriptionHelpIndex]);
+                    Console.WriteLine("\t{0}\t- {1}", helpMessage[CommandHelpIndex], helpMessage[DescriptionHelpIndex]);
                 }
             }
 
@@ -118,39 +123,37 @@ namespace FileCabinetApp
 
         private static void Stat(string parameters)
         {
-            var recordsCount = Program.fileCabinetService.GetStat();
+            var recordsCount = FileCabinetService.GetStat();
 
             Console.WriteLine($"{recordsCount} record(s).");
         }
 
         private static void Create(string parameters)
         {
-            var firstName = FirstNameCheck();
-            var lastName = LastNameCheck();
-            var dateOfBirth = DateOfBirthCheck();
-            var areaCode = AreaCodeCheck();
-            var savings = SavingsCheck();
-            var gender = GenderCheck();
+            var firstName = CheckFirstNameInput();
+            var lastName = CheckLastNameInput();
+            var dateOfBirth = CheckDateOfBirthInput();
+            var areaCode = CheckAreaCodeInput();
+            var savings = CheckSavingsInput();
+            var gender = CheckGenderInput();
 
-            var newRecordId = Program.fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, areaCode, savings, gender);
+            var newRecordId = FileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, areaCode, savings, gender);
 
             Console.WriteLine($"Record #{newRecordId} was created!");
         }
 
         private static void List(string parameters)
         {
-            var records = Program.fileCabinetService.GetRecords();
+            var records = FileCabinetService.GetRecords();
 
             PrintRecords(records);
         }
 
         private static void Edit(string parameters)
         {
-            int id;
-
-            if (int.TryParse(parameters, out id) && id > 0)
+            if (int.TryParse(parameters, out var id) && id > 0)
             {
-                var record = fileCabinetService.GetRecord(id);
+                var record = FileCabinetService.GetRecord(id);
 
                 if (record is null)
                 {
@@ -158,14 +161,14 @@ namespace FileCabinetApp
                     return;
                 }
 
-                var firstName = FirstNameCheck();
-                var lastName = LastNameCheck();
-                var dateOfBirth = DateOfBirthCheck();
-                var areaCode = AreaCodeCheck();
-                var savings = SavingsCheck();
-                var gender = GenderCheck();
+                var firstName = CheckFirstNameInput();
+                var lastName = CheckLastNameInput();
+                var dateOfBirth = CheckDateOfBirthInput();
+                var areaCode = CheckAreaCodeInput();
+                var savings = CheckSavingsInput();
+                var gender = CheckGenderInput();
 
-                Program.fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, areaCode, savings, gender);
+                FileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, areaCode, savings, gender);
 
                 Console.WriteLine($"Record #{id} is updated.");
             }
@@ -177,45 +180,37 @@ namespace FileCabinetApp
 
         private static void Find(string parameters)
         {
-            var searchData = parameters.Split(' ', 2);
+            GetSearchData(parameters, out var searchCategory, out var recordData);
 
-            if (string.IsNullOrWhiteSpace(parameters) || searchData.Length != 2)
+            if (string.IsNullOrWhiteSpace(searchCategory) || string.IsNullOrWhiteSpace(recordData))
             {
                 Console.WriteLine("Please enter a search category and a record data.");
                 return;
             }
-
-            if (string.IsNullOrWhiteSpace(searchData[0]) || string.IsNullOrWhiteSpace(searchData[1]))
-            {
-                Console.WriteLine("Please enter a search category and a record data.");
-                return;
-            }
-
-            var searchCategory = searchData[0].ToUpperInvariant();
-            var recordData = searchData[1].ToUpperInvariant();
 
             switch (searchCategory)
             {
                 case "FIRSTNAME":
-                    var recordsByFirstName = Program.fileCabinetService.FindByFirstName(recordData);
+                    var recordsByFirstName = FileCabinetService.FindByFirstName(recordData);
                     PrintRecords(recordsByFirstName);
                     break;
 
                 case "LASTNAME":
-                    var recordsByLastName = Program.fileCabinetService.FindByLastName(recordData);
+                    var recordsByLastName = FileCabinetService.FindByLastName(recordData);
                     PrintRecords(recordsByLastName);
                     break;
 
                 case "DATEOFBIRTH":
                     DateTime dateOfBirth;
+                    string dateTimeFormat = "M/d/yyyy";
 
-                    if (!DateTime.TryParse(recordData, out dateOfBirth))
+                    if (!DateTime.TryParseExact(recordData, dateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateOfBirth))
                     {
                         Console.WriteLine("Please enter the date of birth in the correct format. Ex.: mm/dd/yyyy - 01/01/1973");
                         break;
                     }
 
-                    var recordsByDateOfBirth = Program.fileCabinetService.FindByDateOfBirth(dateOfBirth);
+                    var recordsByDateOfBirth = FileCabinetService.FindByDateOfBirth(dateOfBirth);
                     PrintRecords(recordsByDateOfBirth);
                     break;
 
@@ -226,7 +221,7 @@ namespace FileCabinetApp
         }
 
         // User input check methods
-        private static string FirstNameCheck()
+        private static string CheckFirstNameInput()
         {
             string? firstName;
 
@@ -239,17 +234,17 @@ namespace FileCabinetApp
                 {
                     Console.WriteLine("Please enter a first name.");
                 }
-                else if (firstName.Length < 2 || firstName.Length > 60)
+                else if (firstName.Length < MinNameLength || firstName.Length > MaxNameLength)
                 {
                     Console.WriteLine("The first name should be 2-60 characters long.");
                 }
             }
-            while (string.IsNullOrWhiteSpace(firstName) || (firstName.Length < 2 || firstName.Length > 60));
+            while (string.IsNullOrWhiteSpace(firstName) || (firstName.Length < MinNameLength || firstName.Length > MaxNameLength));
 
             return firstName;
         }
 
-        private static string LastNameCheck()
+        private static string CheckLastNameInput()
         {
             string? lastName;
 
@@ -262,26 +257,27 @@ namespace FileCabinetApp
                 {
                     Console.WriteLine("Please enter a last name.");
                 }
-                else if (lastName.Length < 2 || lastName.Length > 60)
+                else if (lastName.Length < MinNameLength || lastName.Length > MaxNameLength)
                 {
                     Console.WriteLine("The last name should be 2-60 characters long.");
                 }
             }
-            while (string.IsNullOrWhiteSpace(lastName) || (lastName.Length < 2 || lastName.Length > 60));
+            while (string.IsNullOrWhiteSpace(lastName) || (lastName.Length < MinNameLength || lastName.Length > MaxNameLength));
 
             return lastName;
         }
 
-        private static DateTime DateOfBirthCheck()
+        private static DateTime CheckDateOfBirthInput()
         {
             DateTime dateOfBirth;
             bool correctDateFormat;
+            string dateTimeFormat = "M/d/yyyy";
 
             do
             {
                 Console.Write("Date of birth: ");
                 var dateOfBirthString = Console.ReadLine();
-                correctDateFormat = DateTime.TryParse(dateOfBirthString, out dateOfBirth);
+                correctDateFormat = DateTime.TryParseExact(dateOfBirthString, dateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateOfBirth);
 
                 if (correctDateFormat && (dateOfBirth < new DateTime(1950, 1, 1) || dateOfBirth > DateTime.Today))
                 {
@@ -298,7 +294,7 @@ namespace FileCabinetApp
             return dateOfBirth;
         }
 
-        private static short AreaCodeCheck()
+        private static short CheckAreaCodeInput()
         {
             short areaCode;
             bool correctAreCodeFormat;
@@ -324,7 +320,7 @@ namespace FileCabinetApp
             return areaCode;
         }
 
-        private static decimal SavingsCheck()
+        private static decimal CheckSavingsInput()
         {
             decimal savings;
             bool correctSavingsFormat;
@@ -350,7 +346,7 @@ namespace FileCabinetApp
             return savings;
         }
 
-        private static char GenderCheck()
+        private static char CheckGenderInput()
         {
             char gender;
             bool correctGenderFormat;
@@ -363,7 +359,7 @@ namespace FileCabinetApp
 
                 if (correctGenderFormat)
                 {
-                    if (gender != 'F' && gender != 'M' && gender != 'N')
+                    if (gender != GenderFemale && gender != GenderMale && gender != GenderNotSpecified)
                     {
                         correctGenderFormat = false;
                         Console.WriteLine("The gender can only be F, M or N.");
@@ -371,7 +367,7 @@ namespace FileCabinetApp
                 }
                 else if (!correctGenderFormat)
                 {
-                    Console.WriteLine("Please enter the gender in a correct format. Ex: 'F', 'M' or 'N'.");
+                    Console.WriteLine("Please enter the gender in a correct format. Ex: 'F' - female, 'M' - male or 'N' - not specified.");
                 }
             }
             while (!correctGenderFormat);
@@ -397,6 +393,27 @@ namespace FileCabinetApp
                                   $"+{record.AreaCode}, " +
                                   $"{record.Savings}, " +
                                   $"{record.Gender}.");
+            }
+        }
+
+        // Process user input data in Find method
+        private static void GetSearchData(string parameters, out string? searchCategory, out string? recordData)
+        {
+            searchCategory = null;
+            recordData = null;
+            int searchDataItems = 2;
+            var searchData = parameters.Split(' ', searchDataItems);
+            bool validParameters = !string.IsNullOrWhiteSpace(parameters) && searchData.Length == searchDataItems;
+
+            if (validParameters)
+            {
+                bool validRecordData = !string.IsNullOrWhiteSpace(searchData[0]) && !string.IsNullOrWhiteSpace(searchData[1]);
+
+                if (validRecordData)
+                {
+                    searchCategory = searchData[0].ToUpperInvariant();
+                    recordData = searchData[1];
+                }
             }
         }
     }
