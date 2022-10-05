@@ -1,7 +1,12 @@
 ﻿using System.Globalization;
 
+#pragma warning disable SA1309 // Field names should not begin with underscore
+
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// The service class for the <see cref="FileCabinetRecord"/>.
+    /// </summary>
     public class FileCabinetService
     {
         private const char GenderFemale = 'F';
@@ -14,6 +19,21 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> _lastNameDictionary = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> _dateOfBirthDictionary = new ();
 
+        /// <summary>
+        /// Creates a new record.
+        /// </summary>
+        /// <param name="firstName">The first name.</param>
+        /// <param name="lastName"> The last name.</param>
+        /// <param name="dateOfBirth">The date of birth.</param>
+        /// <param name="areaCode">The area code of a phone number.</param>
+        /// <param name="savings">The amount of savings.</param>
+        /// <param name="gender">The person's gender.</param>
+        /// <returns>The unique Id of the created record.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the parameters "firstName" or "lastName" are null or contain only white spaces.</exception>
+        /// <exception cref="ArgumentException">Thrown if the parameters "firstName" or "lastName" shorter than 2 characters or longer than 60 characters.</exception>
+        /// <exception cref="ArgumentException">Thrown if the parameter "dateOfBirth" is earlier than 01.01.1950 or later than the current date.</exception>
+        /// <exception cref="ArgumentException">Thrown if the parameters "areaCode" and "savings" are less than 0.</exception>
+        /// <exception cref="ArgumentException">Thrown if the parameter "gender" is not equal 'F', 'M' or 'N'.</exception>
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short areaCode, decimal savings, char gender)
         {
             if (string.IsNullOrWhiteSpace(firstName))
@@ -78,6 +98,10 @@ namespace FileCabinetApp
             return record.Id;
         }
 
+        /// <summary>
+        /// Gets all records.
+        /// </summary>
+        /// <returns>The array of all records.</returns>
         public FileCabinetRecord[] GetRecords()
         {
             var records = new FileCabinetRecord[this._list.Count];
@@ -90,6 +114,11 @@ namespace FileCabinetApp
             return records;
         }
 
+        /// <summary>
+        /// Gets a record with a specific Id.
+        /// </summary>
+        /// <param name="id">The Id of a record.</param>
+        /// <returns>The record with a matching Id.</returns>
         public FileCabinetRecord? GetRecord(int id)
         {
             var record = this._list.FirstOrDefault(x => x.Id == id);
@@ -97,11 +126,30 @@ namespace FileCabinetApp
             return record;
         }
 
+        /// <summary>
+        /// Gets the amount of records.
+        /// </summary>
+        /// <returns>The amount of records.</returns>
         public int GetStat()
         {
             return this._list.Count;
         }
 
+        /// <summary>
+        /// Edits a record with a specific Id.
+        /// </summary>
+        /// <param name="id">The Id of the record.</param>
+        /// <param name="firstName">The first name.</param>
+        /// <param name="lastName"> The last name.</param>
+        /// <param name="dateOfBirth">The date of birth.</param>
+        /// <param name="areaCode">The area code of a phone number.</param>
+        /// <param name="savings">The amount of savings.</param>
+        /// <param name="gender">The person's gender.</param>
+        /// <exception cref="ArgumentNullException">Thrown if the parameters "firstName" or "lastName" are null or contain only white spaces.</exception>
+        /// <exception cref="ArgumentException">Thrown if the parameters "firstName" or "lastName" shorter than 2 characters or longer than 60 characters.</exception>
+        /// <exception cref="ArgumentException">Thrown if the parameter "dateOfBirth" is earlier than 01.01.1950 or later than the current date.</exception>
+        /// <exception cref="ArgumentException">Thrown if the parameters "areaCode" and "savings" are less than 0.</exception>
+        /// <exception cref="ArgumentException">Thrown if the parameter "gender" is not equal 'F', 'M' or 'N'.</exception>
         public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, short areaCode, decimal savings, char gender)
         {
             var record = this._list.FirstOrDefault(x => x.Id == id);
@@ -177,6 +225,12 @@ namespace FileCabinetApp
             record.Gender = gender;
         }
 
+        /// <summary>
+        /// Finds records with the same first name.
+        /// </summary>
+        /// <param name="firstName">The first name.</param>
+        /// <returns>The array of records with the same first name.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the parameter "firstName" is null or contains only white spaces.</exception>
         public FileCabinetRecord[] FindByFirstName(string firstName)
         {
             if (string.IsNullOrWhiteSpace(firstName))
@@ -194,6 +248,12 @@ namespace FileCabinetApp
             return Array.Empty<FileCabinetRecord>();
         }
 
+        /// <summary>
+        /// Finds records with the same last name.
+        /// </summary>
+        /// <param name="lastName">The last name.</param>
+        /// <returns>The array of records with the same last name.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the parameter "lastName" is null or contains only white spaces.</exception>
         public FileCabinetRecord[] FindByLastName(string lastName)
         {
             if (string.IsNullOrWhiteSpace(lastName))
@@ -211,6 +271,11 @@ namespace FileCabinetApp
             return Array.Empty<FileCabinetRecord>();
         }
 
+        /// <summary>
+        /// Finds records with the same date of birth.
+        /// </summary>
+        /// <param name="dateOfBirth">The date of birth.</param>
+        /// <returns>The array of records with the same date of birth.</returns>
         public FileCabinetRecord[] FindByDateOfBirth(DateTime dateOfBirth)
         {
             var dateOfBirthKey = dateOfBirth.ToString(DateTimeFormat, CultureInfo.InvariantCulture);

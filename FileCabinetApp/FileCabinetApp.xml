@@ -4,5 +4,144 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.FileCabinetRecord">
+            <summary>
+            This class represents a record with personal information about a person.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Id">
+            <summary>
+            Gets or sets the Id of a record.
+            </summary>
+            <value>The Id of a record.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.FirstName">
+            <summary>
+            Gets or sets the person's first name.
+            </summary>
+            <value>The person's first name.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.LastName">
+            <summary>
+            Gets or sets the person's last name.
+            </summary>
+            <value>The person's last name.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.DateOfBirth">
+            <summary>
+            Gets or sets the person's date of birth.
+            </summary>
+            <value>The person's date of birth.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.AreaCode">
+            <summary>
+            Gets or sets the area code of the person's phone number.
+            </summary>
+            <value>The area code of a person's phone number.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Savings">
+            <summary>
+            Gets or sets the person's amount of savings.
+            </summary>
+            <value>The person's amount of savings.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Gender">
+            <summary>
+            Gets or sets the person's gender.
+            </summary>
+            <value>The person's gender.</value>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetService">
+            <summary>
+            The service class for the <see cref="T:FileCabinetApp.FileCabinetRecord"/>.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
+            <summary>
+            Creates a new record.
+            </summary>
+            <param name="firstName">The first name.</param>
+            <param name="lastName"> The last name.</param>
+            <param name="dateOfBirth">The date of birth.</param>
+            <param name="areaCode">The area code of a phone number.</param>
+            <param name="savings">The amount of savings.</param>
+            <param name="gender">The person's gender.</param>
+            <returns>The unique Id of the created record.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if the parameters "firstName" or "lastName" are null or contain only white spaces.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameters "firstName" or "lastName" shorter than 2 characters or longer than 60 characters.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameter "dateOfBirth" is earlier than 01.01.1950 or later than the current date.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameters "areaCode" and "savings" are less than 0.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameter "gender" is not equal 'F', 'M' or 'N'.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetRecords">
+            <summary>
+            Gets all records.
+            </summary>
+            <returns>The array of all records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetRecord(System.Int32)">
+            <summary>
+            Gets a record with a specific Id.
+            </summary>
+            <param name="id">The Id of a record.</param>
+            <returns>The record with a matching Id.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetStat">
+            <summary>
+            Gets the amount of records.
+            </summary>
+            <returns>The amount of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
+            <summary>
+            Edits a record with a specific Id.
+            </summary>
+            <param name="id">The Id of the record.</param>
+            <param name="firstName">The first name.</param>
+            <param name="lastName"> The last name.</param>
+            <param name="dateOfBirth">The date of birth.</param>
+            <param name="areaCode">The area code of a phone number.</param>
+            <param name="savings">The amount of savings.</param>
+            <param name="gender">The person's gender.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the parameters "firstName" or "lastName" are null or contain only white spaces.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameters "firstName" or "lastName" shorter than 2 characters or longer than 60 characters.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameter "dateOfBirth" is earlier than 01.01.1950 or later than the current date.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameters "areaCode" and "savings" are less than 0.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameter "gender" is not equal 'F', 'M' or 'N'.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByFirstName(System.String)">
+            <summary>
+            Finds records with the same first name.
+            </summary>
+            <param name="firstName">The first name.</param>
+            <returns>The array of records with the same first name.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if the parameter "firstName" is null or contains only white spaces.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByLastName(System.String)">
+            <summary>
+            Finds records with the same last name.
+            </summary>
+            <param name="lastName">The last name.</param>
+            <returns>The array of records with the same last name.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if the parameter "lastName" is null or contains only white spaces.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByDateOfBirth(System.DateTime)">
+            <summary>
+            Finds records with the same date of birth.
+            </summary>
+            <param name="dateOfBirth">The date of birth.</param>
+            <returns>The array of records with the same date of birth.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Program">
+            <summary>
+            This class contains the entry point of the application.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Program.Main(System.String[])">
+            <summary>
+            Entry point of the application.
+            </summary>
+            <param name="args">The command line arguments.</param>
+        </member>
     </members>
 </doc>

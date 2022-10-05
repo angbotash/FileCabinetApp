@@ -2,6 +2,9 @@
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// This class contains the entry point of the application.
+    /// </summary>
     public static class Program
     {
         private const string DeveloperName = "Angela Botasheva";
@@ -47,6 +50,10 @@ namespace FileCabinetApp
             },
         };
 
+        /// <summary>
+        /// Entry point of the application.
+        /// </summary>
+        /// <param name="args">The command line arguments.</param>
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {DeveloperName}");
