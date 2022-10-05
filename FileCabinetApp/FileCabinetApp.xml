@@ -56,22 +56,17 @@
             The service class for the <see cref="T:FileCabinetApp.FileCabinetRecord"/>.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.RecordDataArgs)">
             <summary>
             Creates a new record.
             </summary>
-            <param name="firstName">The first name.</param>
-            <param name="lastName"> The last name.</param>
-            <param name="dateOfBirth">The date of birth.</param>
-            <param name="areaCode">The area code of a phone number.</param>
-            <param name="savings">The amount of savings.</param>
-            <param name="gender">The person's gender.</param>
+            <param name="recordData">The data of a new record.</param>
             <returns>The unique Id of the created record.</returns>
-            <exception cref="T:System.ArgumentNullException">Thrown if the parameters "firstName" or "lastName" are null or contain only white spaces.</exception>
-            <exception cref="T:System.ArgumentException">Thrown if the parameters "firstName" or "lastName" shorter than 2 characters or longer than 60 characters.</exception>
-            <exception cref="T:System.ArgumentException">Thrown if the parameter "dateOfBirth" is earlier than 01.01.1950 or later than the current date.</exception>
-            <exception cref="T:System.ArgumentException">Thrown if the parameters "areaCode" and "savings" are less than 0.</exception>
-            <exception cref="T:System.ArgumentException">Thrown if the parameter "gender" is not equal 'F', 'M' or 'N'.</exception>
+            <exception cref="T:System.ArgumentNullException">Thrown if the parameters "FirstName" or "lastName" are null or contain only white spaces.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameters "FirstName" or "LastName" shorter than 2 characters or longer than 60 characters.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameter "DateOfBirth" is earlier than 01.01.1950 or later than the current date.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameters "AreaCode" and "Savings" are less than 0.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameter "Gender" is not equal 'F', 'M' or 'N'.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.GetRecords">
             <summary>
@@ -92,17 +87,12 @@
             </summary>
             <returns>The amount of records.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordDataArgs)">
             <summary>
             Edits a record with a specific Id.
             </summary>
             <param name="id">The Id of the record.</param>
-            <param name="firstName">The first name.</param>
-            <param name="lastName"> The last name.</param>
-            <param name="dateOfBirth">The date of birth.</param>
-            <param name="areaCode">The area code of a phone number.</param>
-            <param name="savings">The amount of savings.</param>
-            <param name="gender">The person's gender.</param>
+            <param name="recordData">The data of a new record.</param>
             <exception cref="T:System.ArgumentNullException">Thrown if the parameters "firstName" or "lastName" are null or contain only white spaces.</exception>
             <exception cref="T:System.ArgumentException">Thrown if the parameters "firstName" or "lastName" shorter than 2 characters or longer than 60 characters.</exception>
             <exception cref="T:System.ArgumentException">Thrown if the parameter "dateOfBirth" is earlier than 01.01.1950 or later than the current date.</exception>
@@ -142,6 +132,58 @@
             Entry point of the application.
             </summary>
             <param name="args">The command line arguments.</param>
+        </member>
+        <member name="T:FileCabinetApp.RecordDataArgs">
+            <summary>
+            This class represents the parameters for methods in  <see cref="T:FileCabinetApp.FileCabinetRecord"/>.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.RecordDataArgs.#ctor(System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.RecordDataArgs"/> class.
+            </summary>
+            <param name="firstName">The first name.</param>
+            <param name="lastName"> The last name.</param>
+            <param name="dateOfBirth">The date of birth.</param>
+            <param name="areaCode">The area code of a phone number.</param>
+            <param name="savings">The amount of savings.</param>
+            <param name="gender">The person's gender.</param>
+        </member>
+        <member name="P:FileCabinetApp.RecordDataArgs.FirstName">
+            <summary>
+            Gets the person's first name.
+            </summary>
+            <value>The person's first name.</value>
+        </member>
+        <member name="P:FileCabinetApp.RecordDataArgs.LastName">
+            <summary>
+            Gets the person's last name.
+            </summary>
+            <value>The person's last name.</value>
+        </member>
+        <member name="P:FileCabinetApp.RecordDataArgs.DateOfBirth">
+            <summary>
+            Gets the person's date of birth.
+            </summary>
+            <value>The person's date of birth.</value>
+        </member>
+        <member name="P:FileCabinetApp.RecordDataArgs.AreaCode">
+            <summary>
+            Gets the area code of the person's phone number.
+            </summary>
+            <value>The area code of a person's phone number.</value>
+        </member>
+        <member name="P:FileCabinetApp.RecordDataArgs.Savings">
+            <summary>
+            Gets the person's amount of savings.
+            </summary>
+            <value>The person's amount of savings.</value>
+        </member>
+        <member name="P:FileCabinetApp.RecordDataArgs.Gender">
+            <summary>
+            Gets the person's gender.
+            </summary>
+            <value>The person's gender.</value>
         </member>
     </members>
 </doc>

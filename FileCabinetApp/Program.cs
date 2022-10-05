@@ -144,7 +144,9 @@ namespace FileCabinetApp
             var savings = CheckSavingsInput();
             var gender = CheckGenderInput();
 
-            var newRecordId = FileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, areaCode, savings, gender);
+            var recordData = new RecordDataArgs(firstName, lastName, dateOfBirth, areaCode, savings, gender);
+
+            var newRecordId = FileCabinetService.CreateRecord(recordData);
 
             Console.WriteLine($"Record #{newRecordId} was created!");
         }
@@ -175,7 +177,9 @@ namespace FileCabinetApp
                 var savings = CheckSavingsInput();
                 var gender = CheckGenderInput();
 
-                FileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, areaCode, savings, gender);
+                var recordData = new RecordDataArgs(firstName, lastName, dateOfBirth, areaCode, savings, gender);
+
+                FileCabinetService.EditRecord(id, recordData);
 
                 Console.WriteLine($"Record #{id} is updated.");
             }

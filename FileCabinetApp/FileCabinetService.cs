@@ -22,56 +22,51 @@ namespace FileCabinetApp
         /// <summary>
         /// Creates a new record.
         /// </summary>
-        /// <param name="firstName">The first name.</param>
-        /// <param name="lastName"> The last name.</param>
-        /// <param name="dateOfBirth">The date of birth.</param>
-        /// <param name="areaCode">The area code of a phone number.</param>
-        /// <param name="savings">The amount of savings.</param>
-        /// <param name="gender">The person's gender.</param>
+        /// <param name="recordData">The data of a new record.</param>
         /// <returns>The unique Id of the created record.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if the parameters "firstName" or "lastName" are null or contain only white spaces.</exception>
-        /// <exception cref="ArgumentException">Thrown if the parameters "firstName" or "lastName" shorter than 2 characters or longer than 60 characters.</exception>
-        /// <exception cref="ArgumentException">Thrown if the parameter "dateOfBirth" is earlier than 01.01.1950 or later than the current date.</exception>
-        /// <exception cref="ArgumentException">Thrown if the parameters "areaCode" and "savings" are less than 0.</exception>
-        /// <exception cref="ArgumentException">Thrown if the parameter "gender" is not equal 'F', 'M' or 'N'.</exception>
-        public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short areaCode, decimal savings, char gender)
+        /// <exception cref="ArgumentNullException">Thrown if the parameters "FirstName" or "lastName" are null or contain only white spaces.</exception>
+        /// <exception cref="ArgumentException">Thrown if the parameters "FirstName" or "LastName" shorter than 2 characters or longer than 60 characters.</exception>
+        /// <exception cref="ArgumentException">Thrown if the parameter "DateOfBirth" is earlier than 01.01.1950 or later than the current date.</exception>
+        /// <exception cref="ArgumentException">Thrown if the parameters "AreaCode" and "Savings" are less than 0.</exception>
+        /// <exception cref="ArgumentException">Thrown if the parameter "Gender" is not equal 'F', 'M' or 'N'.</exception>
+        public int CreateRecord(RecordDataArgs recordData)
         {
-            if (string.IsNullOrWhiteSpace(firstName))
+            if (string.IsNullOrWhiteSpace(recordData.FirstName))
             {
-                throw new ArgumentNullException(nameof(firstName), "First name cannot be null or white space.");
+                throw new ArgumentNullException(nameof(recordData.FirstName), "First name cannot be null or white space.");
             }
 
-            if (firstName.Length < 2 || firstName.Length > 60)
+            if (recordData.FirstName.Length < 2 || recordData.FirstName.Length > 60)
             {
                 throw new ArgumentException("First name cannot be shorter than 2 characters and longer than 60 characters.");
             }
 
-            if (string.IsNullOrWhiteSpace(lastName))
+            if (string.IsNullOrWhiteSpace(recordData.LastName))
             {
-                throw new ArgumentNullException(nameof(lastName), "Last name cannot be null or white space.");
+                throw new ArgumentNullException(nameof(recordData.LastName), "Last name cannot be null or white space.");
             }
 
-            if (lastName.Length < 2 || lastName.Length > 60)
+            if (recordData.LastName.Length < 2 || recordData.LastName.Length > 60)
             {
                 throw new ArgumentException("Last name cannot be shorter than 2 characters and longer than 60 characters.");
             }
 
-            if (dateOfBirth < new DateTime(1950, 1, 1) || dateOfBirth > DateTime.Today)
+            if (recordData.DateOfBirth < new DateTime(1950, 1, 1) || recordData.DateOfBirth > DateTime.Today)
             {
                 throw new ArgumentException("Date of birth cannot be earlier than 1-Jan-1950 or later than the current date.");
             }
 
-            if (areaCode < 0)
+            if (recordData.AreaCode < 0)
             {
                 throw new ArgumentException("Area code cannot be a negative number.");
             }
 
-            if (savings < 0)
+            if (recordData.Savings < 0)
             {
                 throw new ArgumentException("Savings cannot be a negative number.");
             }
 
-            if (gender != GenderFemale && gender != GenderMale && gender != GenderNotSpecified)
+            if (recordData.Gender != GenderFemale && recordData.Gender != GenderMale && recordData.Gender != GenderNotSpecified)
             {
                 throw new ArgumentException("Gender can only be F, M or N.");
             }
@@ -79,12 +74,12 @@ namespace FileCabinetApp
             var record = new FileCabinetRecord
             {
                 Id = this._list.Count + 1,
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth,
-                AreaCode = areaCode,
-                Savings = savings,
-                Gender = gender,
+                FirstName = recordData.FirstName,
+                LastName = recordData.LastName,
+                DateOfBirth = recordData.DateOfBirth,
+                AreaCode = recordData.AreaCode,
+                Savings = recordData.Savings,
+                Gender = recordData.Gender,
             };
 
             var dateOfBirthKey = record.DateOfBirth.ToString(DateTimeFormat, CultureInfo.InvariantCulture);
@@ -139,18 +134,13 @@ namespace FileCabinetApp
         /// Edits a record with a specific Id.
         /// </summary>
         /// <param name="id">The Id of the record.</param>
-        /// <param name="firstName">The first name.</param>
-        /// <param name="lastName"> The last name.</param>
-        /// <param name="dateOfBirth">The date of birth.</param>
-        /// <param name="areaCode">The area code of a phone number.</param>
-        /// <param name="savings">The amount of savings.</param>
-        /// <param name="gender">The person's gender.</param>
+        /// <param name="recordData">The data of a new record.</param>
         /// <exception cref="ArgumentNullException">Thrown if the parameters "firstName" or "lastName" are null or contain only white spaces.</exception>
         /// <exception cref="ArgumentException">Thrown if the parameters "firstName" or "lastName" shorter than 2 characters or longer than 60 characters.</exception>
         /// <exception cref="ArgumentException">Thrown if the parameter "dateOfBirth" is earlier than 01.01.1950 or later than the current date.</exception>
         /// <exception cref="ArgumentException">Thrown if the parameters "areaCode" and "savings" are less than 0.</exception>
         /// <exception cref="ArgumentException">Thrown if the parameter "gender" is not equal 'F', 'M' or 'N'.</exception>
-        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, short areaCode, decimal savings, char gender)
+        public void EditRecord(int id, RecordDataArgs recordData)
         {
             var record = this._list.FirstOrDefault(x => x.Id == id);
 
@@ -159,42 +149,42 @@ namespace FileCabinetApp
                 throw new ArgumentException($"There is no record with this Id - {id}");
             }
 
-            if (string.IsNullOrWhiteSpace(firstName))
+            if (string.IsNullOrWhiteSpace(recordData.FirstName))
             {
-                throw new ArgumentNullException(nameof(firstName), "First name cannot be null or white space.");
+                throw new ArgumentNullException(nameof(recordData.FirstName), "First name cannot be null or white space.");
             }
 
-            if (firstName.Length < 2 || firstName.Length > 60)
+            if (recordData.FirstName.Length < 2 || recordData.FirstName.Length > 60)
             {
                 throw new ArgumentException("First name cannot be shorter than 2 characters and longer than 60 characters.");
             }
 
-            if (string.IsNullOrWhiteSpace(lastName))
+            if (string.IsNullOrWhiteSpace(recordData.LastName))
             {
-                throw new ArgumentNullException(nameof(lastName), "Last name cannot be null or white space.");
+                throw new ArgumentNullException(nameof(recordData.LastName), "Last name cannot be null or white space.");
             }
 
-            if (lastName.Length < 2 || lastName.Length > 60)
+            if (recordData.LastName.Length < 2 || recordData.LastName.Length > 60)
             {
                 throw new ArgumentException("Last name cannot be shorter than 2 characters and longer than 60 characters.");
             }
 
-            if (dateOfBirth < new DateTime(1950, 1, 1) || dateOfBirth > DateTime.Today)
+            if (recordData.DateOfBirth < new DateTime(1950, 1, 1) || recordData.DateOfBirth > DateTime.Today)
             {
                 throw new ArgumentException("Date of birth cannot be earlier than 1-Jan-1950 or later than the current date.");
             }
 
-            if (areaCode < 0)
+            if (recordData.AreaCode < 0)
             {
                 throw new ArgumentException("Area code cannot be a negative number.");
             }
 
-            if (savings < 0)
+            if (recordData.Savings < 0)
             {
                 throw new ArgumentException("Savings cannot be a negative number.");
             }
 
-            if (gender != GenderFemale && gender != GenderMale && gender != GenderNotSpecified)
+            if (recordData.Gender != GenderFemale && recordData.Gender != GenderMale && recordData.Gender != GenderNotSpecified)
             {
                 throw new ArgumentException("Gender can only be F, M or N.");
             }
@@ -202,12 +192,12 @@ namespace FileCabinetApp
             var updatedRecord = new FileCabinetRecord()
             {
                 Id = id,
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth,
-                AreaCode = areaCode,
-                Savings = savings,
-                Gender = gender,
+                FirstName = recordData.FirstName,
+                LastName = recordData.LastName,
+                DateOfBirth = recordData.DateOfBirth,
+                AreaCode = recordData.AreaCode,
+                Savings = recordData.Savings,
+                Gender = recordData.Gender,
             };
 
             var oldDateOfBirthString = record.DateOfBirth.ToString(DateTimeFormat, CultureInfo.InvariantCulture);
@@ -217,12 +207,12 @@ namespace FileCabinetApp
             UpdateRecordInDictionary(this._lastNameDictionary, updatedRecord, record.LastName, updatedRecord.LastName);
             UpdateRecordInDictionary(this._dateOfBirthDictionary, updatedRecord, oldDateOfBirthString, newDateOfBirthString);
 
-            record.FirstName = firstName;
-            record.LastName = lastName;
-            record.DateOfBirth = dateOfBirth;
-            record.AreaCode = areaCode;
-            record.Savings = savings;
-            record.Gender = gender;
+            record.FirstName = recordData.FirstName;
+            record.LastName = recordData.LastName;
+            record.DateOfBirth = recordData.DateOfBirth;
+            record.AreaCode = recordData.AreaCode;
+            record.Savings = recordData.Savings;
+            record.Gender = recordData.Gender;
         }
 
         /// <summary>
