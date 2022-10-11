@@ -5,9 +5,9 @@
 namespace FileCabinetApp
 {
     /// <summary>
-    /// The service class for the <see cref="FileCabinetRecord"/>.
+    /// This class stores default validation criteria for record's data.
     /// </summary>
-    public abstract class FileCabinetService
+    public class FileCabinetDefaultService : FileCabinetService
     {
         private const char GenderFemale = 'F';
         private const char GenderMale = 'M';
@@ -24,7 +24,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="recordData">The data of a new record.</param>
         /// <returns>The unique Id of the created record.</returns>
-        public virtual int CreateRecord(RecordDataArgs recordData)
+        public override int CreateRecord(RecordDataArgs recordData)
         {
             this.ValidateParameters(recordData);
 
@@ -54,7 +54,7 @@ namespace FileCabinetApp
         /// Gets all records.
         /// </summary>
         /// <returns>The array of all records.</returns>
-        public virtual FileCabinetRecord[] GetRecords()
+        public override FileCabinetRecord[] GetRecords()
         {
             var records = new FileCabinetRecord[this._list.Count];
 
@@ -71,7 +71,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="id">The Id of a record.</param>
         /// <returns>The record with a matching Id.</returns>
-        public virtual FileCabinetRecord? GetRecord(int id)
+        public override FileCabinetRecord? GetRecord(int id)
         {
             var record = this._list.FirstOrDefault(x => x.Id == id);
 
@@ -82,7 +82,7 @@ namespace FileCabinetApp
         /// Gets the amount of records.
         /// </summary>
         /// <returns>The amount of records.</returns>
-        public virtual int GetStat()
+        public override int GetStat()
         {
             return this._list.Count;
         }
@@ -93,7 +93,7 @@ namespace FileCabinetApp
         /// <param name="id">The Id of the record.</param>
         /// <param name="recordData">The data of a new record.</param>
         /// <exception cref="ArgumentNullException">Thrown if "record" is null.</exception>
-        public virtual void EditRecord(int id, RecordDataArgs recordData)
+        public override void EditRecord(int id, RecordDataArgs recordData)
         {
             var record = this._list.FirstOrDefault(x => x.Id == id);
 
@@ -136,7 +136,7 @@ namespace FileCabinetApp
         /// <param name="firstName">The first name.</param>
         /// <returns>The array of records with the same first name.</returns>
         /// <exception cref="ArgumentNullException">Thrown if the parameter "firstName" is null or contains only white spaces.</exception>
-        public virtual FileCabinetRecord[] FindByFirstName(string firstName)
+        public override FileCabinetRecord[] FindByFirstName(string firstName)
         {
             if (string.IsNullOrWhiteSpace(firstName))
             {
@@ -159,7 +159,7 @@ namespace FileCabinetApp
         /// <param name="lastName">The last name.</param>
         /// <returns>The array of records with the same last name.</returns>
         /// <exception cref="ArgumentNullException">Thrown if the parameter "lastName" is null or contains only white spaces.</exception>
-        public virtual FileCabinetRecord[] FindByLastName(string lastName)
+        public override FileCabinetRecord[] FindByLastName(string lastName)
         {
             if (string.IsNullOrWhiteSpace(lastName))
             {
@@ -181,7 +181,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="dateOfBirth">The date of birth.</param>
         /// <returns>The array of records with the same date of birth.</returns>
-        public virtual FileCabinetRecord[] FindByDateOfBirth(DateTime dateOfBirth)
+        public override FileCabinetRecord[] FindByDateOfBirth(DateTime dateOfBirth)
         {
             var dateOfBirthKey = dateOfBirth.ToString(DateTimeFormat, CultureInfo.InvariantCulture);
 
@@ -194,7 +194,7 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Validates record's data.
+        /// Validates record's data using default criteria.
         /// </summary>
         /// <param name="recordData">The data of a new record.</param>
         /// <exception cref="ArgumentNullException">Thrown if the parameters "FirstName" or "lastName" are null or contain only white spaces.</exception>
@@ -202,7 +202,7 @@ namespace FileCabinetApp
         /// <exception cref="ArgumentException">Thrown if the parameter "DateOfBirth" is earlier than 01.01.1950 or later than the current date.</exception>
         /// <exception cref="ArgumentException">Thrown if the parameters "AreaCode" and "Savings" are less than 0.</exception>
         /// <exception cref="ArgumentException">Thrown if the parameter "Gender" is not equal 'F', 'M' or 'N'.</exception>
-        protected virtual void ValidateParameters(RecordDataArgs recordData)
+        protected override void ValidateParameters(RecordDataArgs recordData)
         {
             if (string.IsNullOrWhiteSpace(recordData.FirstName))
             {

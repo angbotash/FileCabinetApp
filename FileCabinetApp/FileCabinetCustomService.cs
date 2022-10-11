@@ -5,13 +5,12 @@
 namespace FileCabinetApp
 {
     /// <summary>
-    /// The service class for the <see cref="FileCabinetRecord"/>.
+    /// This class stores custom validation criteria for record's data.
     /// </summary>
-    public abstract class FileCabinetService
+    public class FileCabinetCustomService : FileCabinetService
     {
         private const char GenderFemale = 'F';
         private const char GenderMale = 'M';
-        private const char GenderNotSpecified = 'N';
         private const string DateTimeFormat = "M/d/yyyy";
 
         private readonly List<FileCabinetRecord> _list = new ();
@@ -24,7 +23,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="recordData">The data of a new record.</param>
         /// <returns>The unique Id of the created record.</returns>
-        public virtual int CreateRecord(RecordDataArgs recordData)
+        public override int CreateRecord(RecordDataArgs recordData)
         {
             this.ValidateParameters(recordData);
 
@@ -54,7 +53,7 @@ namespace FileCabinetApp
         /// Gets all records.
         /// </summary>
         /// <returns>The array of all records.</returns>
-        public virtual FileCabinetRecord[] GetRecords()
+        public override FileCabinetRecord[] GetRecords()
         {
             var records = new FileCabinetRecord[this._list.Count];
 
@@ -71,7 +70,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="id">The Id of a record.</param>
         /// <returns>The record with a matching Id.</returns>
-        public virtual FileCabinetRecord? GetRecord(int id)
+        public override FileCabinetRecord? GetRecord(int id)
         {
             var record = this._list.FirstOrDefault(x => x.Id == id);
 
@@ -82,7 +81,7 @@ namespace FileCabinetApp
         /// Gets the amount of records.
         /// </summary>
         /// <returns>The amount of records.</returns>
-        public virtual int GetStat()
+        public override int GetStat()
         {
             return this._list.Count;
         }
@@ -93,7 +92,7 @@ namespace FileCabinetApp
         /// <param name="id">The Id of the record.</param>
         /// <param name="recordData">The data of a new record.</param>
         /// <exception cref="ArgumentNullException">Thrown if "record" is null.</exception>
-        public virtual void EditRecord(int id, RecordDataArgs recordData)
+        public override void EditRecord(int id, RecordDataArgs recordData)
         {
             var record = this._list.FirstOrDefault(x => x.Id == id);
 
@@ -136,7 +135,7 @@ namespace FileCabinetApp
         /// <param name="firstName">The first name.</param>
         /// <returns>The array of records with the same first name.</returns>
         /// <exception cref="ArgumentNullException">Thrown if the parameter "firstName" is null or contains only white spaces.</exception>
-        public virtual FileCabinetRecord[] FindByFirstName(string firstName)
+        public override FileCabinetRecord[] FindByFirstName(string firstName)
         {
             if (string.IsNullOrWhiteSpace(firstName))
             {
@@ -159,7 +158,7 @@ namespace FileCabinetApp
         /// <param name="lastName">The last name.</param>
         /// <returns>The array of records with the same last name.</returns>
         /// <exception cref="ArgumentNullException">Thrown if the parameter "lastName" is null or contains only white spaces.</exception>
-        public virtual FileCabinetRecord[] FindByLastName(string lastName)
+        public override FileCabinetRecord[] FindByLastName(string lastName)
         {
             if (string.IsNullOrWhiteSpace(lastName))
             {
@@ -181,7 +180,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="dateOfBirth">The date of birth.</param>
         /// <returns>The array of records with the same date of birth.</returns>
-        public virtual FileCabinetRecord[] FindByDateOfBirth(DateTime dateOfBirth)
+        public override FileCabinetRecord[] FindByDateOfBirth(DateTime dateOfBirth)
         {
             var dateOfBirthKey = dateOfBirth.ToString(DateTimeFormat, CultureInfo.InvariantCulture);
 
@@ -194,24 +193,24 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Validates record's data.
+        /// Validates record's data using default criteria.
         /// </summary>
         /// <param name="recordData">The data of a new record.</param>
         /// <exception cref="ArgumentNullException">Thrown if the parameters "FirstName" or "lastName" are null or contain only white spaces.</exception>
-        /// <exception cref="ArgumentException">Thrown if the parameters "FirstName" or "LastName" shorter than 2 characters or longer than 60 characters.</exception>
-        /// <exception cref="ArgumentException">Thrown if the parameter "DateOfBirth" is earlier than 01.01.1950 or later than the current date.</exception>
+        /// <exception cref="ArgumentException">Thrown if the parameters "FirstName" or "LastName" shorter than 2 characters or longer than 30 characters.</exception>
+        /// <exception cref="ArgumentException">Thrown if the parameter "DateOfBirth" is earlier than 01.01.1920 or later than the current date.</exception>
         /// <exception cref="ArgumentException">Thrown if the parameters "AreaCode" and "Savings" are less than 0.</exception>
-        /// <exception cref="ArgumentException">Thrown if the parameter "Gender" is not equal 'F', 'M' or 'N'.</exception>
-        protected virtual void ValidateParameters(RecordDataArgs recordData)
+        /// <exception cref="ArgumentException">Thrown if the parameter "Gender" is not equal 'F' or 'M'.</exception>
+        protected override void ValidateParameters(RecordDataArgs recordData)
         {
             if (string.IsNullOrWhiteSpace(recordData.FirstName))
             {
                 throw new ArgumentNullException(nameof(recordData.FirstName), "First name cannot be null or white space.");
             }
 
-            if (recordData.FirstName.Length < 2 || recordData.FirstName.Length > 60)
+            if (recordData.FirstName.Length < 2 || recordData.FirstName.Length > 30)
             {
-                throw new ArgumentException("First name cannot be shorter than 2 characters and longer than 60 characters.");
+                throw new ArgumentException("First name cannot be shorter than 2 characters and longer than 30 characters.");
             }
 
             if (string.IsNullOrWhiteSpace(recordData.LastName))
@@ -219,19 +218,19 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordData.LastName), "Last name cannot be null or white space.");
             }
 
-            if (recordData.LastName.Length < 2 || recordData.LastName.Length > 60)
+            if (recordData.LastName.Length < 2 || recordData.LastName.Length > 30)
             {
-                throw new ArgumentException("Last name cannot be shorter than 2 characters and longer than 60 characters.");
+                throw new ArgumentException("Last name cannot be shorter than 2 characters and longer than 30 characters.");
             }
 
             if (recordData.DateOfBirth < new DateTime(1950, 1, 1) || recordData.DateOfBirth > DateTime.Today)
             {
-                throw new ArgumentException("Date of birth cannot be earlier than 1-Jan-1950 or later than the current date.");
+                throw new ArgumentException("Date of birth cannot be earlier than 1-Jan-1920 or later than the current date.");
             }
 
-            if (recordData.AreaCode < 0)
+            if (recordData.AreaCode < 0 || recordData.AreaCode > 999)
             {
-                throw new ArgumentException("Area code cannot be a negative number.");
+                throw new ArgumentException("Area code cannot be a negative number or be longer than 3 digits.");
             }
 
             if (recordData.Savings < 0)
@@ -239,9 +238,9 @@ namespace FileCabinetApp
                 throw new ArgumentException("Savings cannot be a negative number.");
             }
 
-            if (recordData.Gender != GenderFemale && recordData.Gender != GenderMale && recordData.Gender != GenderNotSpecified)
+            if (recordData.Gender != GenderFemale && recordData.Gender != GenderMale)
             {
-                throw new ArgumentException("Gender can only be F, M or N.");
+                throw new ArgumentException("Gender can only be F or M.");
             }
         }
 

@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 
+#pragma warning disable CA1309 // Use ordinal string comparison
+
 namespace FileCabinetApp
 {
     /// <summary>
@@ -17,8 +19,9 @@ namespace FileCabinetApp
         private const char GenderFemale = 'F';
         private const char GenderMale = 'M';
         private const char GenderNotSpecified = 'N';
+        private const string DateTimeFormat = "M/d/yyyy";
 
-        private static readonly FileCabinetService FileCabinetService = new ();
+        private static readonly FileCabinetCustomService FileCabinetCustomService = new ();
 
         private static bool isRunning = true;
 
@@ -75,6 +78,7 @@ namespace FileCabinetApp
                 }
 
                 var index = Array.FindIndex(commands, 0, commands.Length, i => i.Item1.Equals(command, StringComparison.InvariantCultureIgnoreCase));
+
                 if (index >= 0)
                 {
                     const int parametersIndex = 1;
@@ -130,7 +134,7 @@ namespace FileCabinetApp
 
         private static void Stat(string parameters)
         {
-            var recordsCount = FileCabinetService.GetStat();
+            var recordsCount = FileCabinetCustomService.GetStat();
 
             Console.WriteLine($"{recordsCount} record(s).");
         }
@@ -146,14 +150,14 @@ namespace FileCabinetApp
 
             var recordData = new RecordDataArgs(firstName, lastName, dateOfBirth, areaCode, savings, gender);
 
-            var newRecordId = FileCabinetService.CreateRecord(recordData);
+            var newRecordId = FileCabinetCustomService.CreateRecord(recordData);
 
             Console.WriteLine($"Record #{newRecordId} was created!");
         }
 
         private static void List(string parameters)
         {
-            var records = FileCabinetService.GetRecords();
+            var records = FileCabinetCustomService.GetRecords();
 
             PrintRecords(records);
         }
@@ -162,7 +166,7 @@ namespace FileCabinetApp
         {
             if (int.TryParse(parameters, out var id) && id > 0)
             {
-                var record = FileCabinetService.GetRecord(id);
+                var record = FileCabinetCustomService.GetRecord(id);
 
                 if (record is null)
                 {
@@ -179,7 +183,7 @@ namespace FileCabinetApp
 
                 var recordData = new RecordDataArgs(firstName, lastName, dateOfBirth, areaCode, savings, gender);
 
-                FileCabinetService.EditRecord(id, recordData);
+                FileCabinetCustomService.EditRecord(id, recordData);
 
                 Console.WriteLine($"Record #{id} is updated.");
             }
@@ -202,26 +206,25 @@ namespace FileCabinetApp
             switch (searchCategory)
             {
                 case "FIRSTNAME":
-                    var recordsByFirstName = FileCabinetService.FindByFirstName(recordData);
+                    var recordsByFirstName = FileCabinetCustomService.FindByFirstName(recordData);
                     PrintRecords(recordsByFirstName);
                     break;
 
                 case "LASTNAME":
-                    var recordsByLastName = FileCabinetService.FindByLastName(recordData);
+                    var recordsByLastName = FileCabinetCustomService.FindByLastName(recordData);
                     PrintRecords(recordsByLastName);
                     break;
 
                 case "DATEOFBIRTH":
                     DateTime dateOfBirth;
-                    string dateTimeFormat = "M/d/yyyy";
 
-                    if (!DateTime.TryParseExact(recordData, dateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateOfBirth))
+                    if (!DateTime.TryParseExact(recordData, DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateOfBirth))
                     {
                         Console.WriteLine("Please enter the date of birth in the correct format. Ex.: mm/dd/yyyy - 01/01/1973");
                         break;
                     }
 
-                    var recordsByDateOfBirth = FileCabinetService.FindByDateOfBirth(dateOfBirth);
+                    var recordsByDateOfBirth = FileCabinetCustomService.FindByDateOfBirth(dateOfBirth);
                     PrintRecords(recordsByDateOfBirth);
                     break;
 
@@ -282,13 +285,12 @@ namespace FileCabinetApp
         {
             DateTime dateOfBirth;
             bool correctDateFormat;
-            string dateTimeFormat = "M/d/yyyy";
 
             do
             {
                 Console.Write("Date of birth: ");
                 var dateOfBirthString = Console.ReadLine();
-                correctDateFormat = DateTime.TryParseExact(dateOfBirthString, dateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateOfBirth);
+                correctDateFormat = DateTime.TryParseExact(dateOfBirthString, DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateOfBirth);
 
                 if (correctDateFormat && (dateOfBirth < new DateTime(1950, 1, 1) || dateOfBirth > DateTime.Today))
                 {
