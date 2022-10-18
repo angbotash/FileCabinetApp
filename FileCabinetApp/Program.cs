@@ -20,8 +20,12 @@ namespace FileCabinetApp
         private const char GenderMale = 'M';
         private const char GenderNotSpecified = 'N';
         private const string DateTimeFormat = "M/d/yyyy";
+        private const string ValidationLong = "--validation-rules";
+        private const string ValidationShort = "-v";
+        private const string ValidationCustomRule = "CUSTOM";
+        private const string ValidationDefaultRule = "DEFAULT";
 
-        private static readonly FileCabinetCustomService FileCabinetCustomService = new ();
+        private static FileCabinetService fileCabinetService;
 
         private static bool isRunning = true;
 
@@ -59,9 +63,24 @@ namespace FileCabinetApp
         /// <param name="args">The command line arguments.</param>
         public static void Main(string[] args)
         {
+            var validationRule = GetValidationRule(args);
+            var validationRuleMessage = GetValidationRuleMessage(args);
+
+            if (string.IsNullOrEmpty(validationRuleMessage) || string.IsNullOrEmpty(validationRule))
+            {
+                Console.WriteLine("The validation rule is not recognized.");
+                return;
+            }
+
+            Console.WriteLine($"$ FileCabinetApp.exe {string.Join(' ', args)}");
             Console.WriteLine($"File Cabinet Application, developed by {DeveloperName}");
+            Console.WriteLine(validationRuleMessage);
             Console.WriteLine(HintMessage);
             Console.WriteLine();
+
+            fileCabinetService = validationRule == ValidationCustomRule
+                ? new FileCabinetCustomService()
+                : new FileCabinetDefaultService();
 
             do
             {
@@ -134,7 +153,7 @@ namespace FileCabinetApp
 
         private static void Stat(string parameters)
         {
-            var recordsCount = FileCabinetCustomService.GetStat();
+            var recordsCount = fileCabinetService.GetStat();
 
             Console.WriteLine($"{recordsCount} record(s).");
         }
@@ -150,14 +169,14 @@ namespace FileCabinetApp
 
             var recordData = new RecordDataArgs(firstName, lastName, dateOfBirth, areaCode, savings, gender);
 
-            var newRecordId = FileCabinetCustomService.CreateRecord(recordData);
+            var newRecordId = fileCabinetService.CreateRecord(recordData);
 
             Console.WriteLine($"Record #{newRecordId} was created!");
         }
 
         private static void List(string parameters)
         {
-            var records = FileCabinetCustomService.GetRecords();
+            var records = fileCabinetService.GetRecords();
 
             PrintRecords(records);
         }
@@ -166,7 +185,7 @@ namespace FileCabinetApp
         {
             if (int.TryParse(parameters, out var id) && id > 0)
             {
-                var record = FileCabinetCustomService.GetRecord(id);
+                var record = fileCabinetService.GetRecord(id);
 
                 if (record is null)
                 {
@@ -183,7 +202,7 @@ namespace FileCabinetApp
 
                 var recordData = new RecordDataArgs(firstName, lastName, dateOfBirth, areaCode, savings, gender);
 
-                FileCabinetCustomService.EditRecord(id, recordData);
+                fileCabinetService.EditRecord(id, recordData);
 
                 Console.WriteLine($"Record #{id} is updated.");
             }
@@ -206,12 +225,12 @@ namespace FileCabinetApp
             switch (searchCategory)
             {
                 case "FIRSTNAME":
-                    var recordsByFirstName = FileCabinetCustomService.FindByFirstName(recordData);
+                    var recordsByFirstName = fileCabinetService.FindByFirstName(recordData);
                     PrintRecords(recordsByFirstName);
                     break;
 
                 case "LASTNAME":
-                    var recordsByLastName = FileCabinetCustomService.FindByLastName(recordData);
+                    var recordsByLastName = fileCabinetService.FindByLastName(recordData);
                     PrintRecords(recordsByLastName);
                     break;
 
@@ -224,7 +243,7 @@ namespace FileCabinetApp
                         break;
                     }
 
-                    var recordsByDateOfBirth = FileCabinetCustomService.FindByDateOfBirth(dateOfBirth);
+                    var recordsByDateOfBirth = fileCabinetService.FindByDateOfBirth(dateOfBirth);
                     PrintRecords(recordsByDateOfBirth);
                     break;
 
@@ -386,6 +405,69 @@ namespace FileCabinetApp
             while (!correctGenderFormat);
 
             return gender;
+        }
+
+        // Validation input check
+        private static string GetValidationRuleMessage(string[] args)
+        {
+            var ruleMessage = string.Empty;
+
+            if (args.Length == 0)
+            {
+                ruleMessage = "Using default validation rules.";
+                return ruleMessage;
+            }
+
+            var rule = GetValidationRule(args);
+
+            switch (rule)
+            {
+             case ValidationDefaultRule:
+                 ruleMessage = "Using default validation rules.";
+                 return ruleMessage;
+             case ValidationCustomRule:
+                 ruleMessage = "Using custom validation rules.";
+                 return ruleMessage;
+             default:
+                 return ruleMessage;
+            }
+        }
+
+        private static string GetValidationRule(string[] args)
+        {
+            var rule = string.Empty;
+
+            if (args.Length == 0)
+            {
+                rule = ValidationDefaultRule;
+                return rule;
+            }
+
+            var ruleTemp = string.Empty;
+
+            if (args.Length == 1)
+            {
+                var argsSplit = args[0].Split('=', 2);
+                var validation = argsSplit[0];
+                ruleTemp = argsSplit.Length != 2 && (validation != ValidationLong || validation != ValidationShort) ? rule : argsSplit[1].ToUpperInvariant();
+            }
+            else if (args.Length == 2)
+            {
+                var validation = args[0];
+                ruleTemp = validation == ValidationLong || validation == ValidationShort ? args[1].ToUpperInvariant() : rule;
+            }
+
+            switch (ruleTemp)
+            {
+                case ValidationDefaultRule:
+                    rule = ValidationDefaultRule;
+                    return rule;
+                case ValidationCustomRule:
+                    rule = ValidationCustomRule;
+                    return rule;
+                default:
+                    return rule;
+            }
         }
 
         // Prints records

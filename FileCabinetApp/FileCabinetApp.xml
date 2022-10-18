@@ -9,63 +9,6 @@
             This class stores custom validation criteria for record's data.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.CreateRecord(FileCabinetApp.RecordDataArgs)">
-            <summary>
-            Creates a new record.
-            </summary>
-            <param name="recordData">The data of a new record.</param>
-            <returns>The unique Id of the created record.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.GetRecords">
-            <summary>
-            Gets all records.
-            </summary>
-            <returns>The array of all records.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.GetRecord(System.Int32)">
-            <summary>
-            Gets a record with a specific Id.
-            </summary>
-            <param name="id">The Id of a record.</param>
-            <returns>The record with a matching Id.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.GetStat">
-            <summary>
-            Gets the amount of records.
-            </summary>
-            <returns>The amount of records.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.EditRecord(System.Int32,FileCabinetApp.RecordDataArgs)">
-            <summary>
-            Edits a record with a specific Id.
-            </summary>
-            <param name="id">The Id of the record.</param>
-            <param name="recordData">The data of a new record.</param>
-            <exception cref="T:System.ArgumentNullException">Thrown if "record" is null.</exception>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.FindByFirstName(System.String)">
-            <summary>
-            Finds records with the same first name.
-            </summary>
-            <param name="firstName">The first name.</param>
-            <returns>The array of records with the same first name.</returns>
-            <exception cref="T:System.ArgumentNullException">Thrown if the parameter "firstName" is null or contains only white spaces.</exception>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.FindByLastName(System.String)">
-            <summary>
-            Finds records with the same last name.
-            </summary>
-            <param name="lastName">The last name.</param>
-            <returns>The array of records with the same last name.</returns>
-            <exception cref="T:System.ArgumentNullException">Thrown if the parameter "lastName" is null or contains only white spaces.</exception>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.FindByDateOfBirth(System.DateTime)">
-            <summary>
-            Finds records with the same date of birth.
-            </summary>
-            <param name="dateOfBirth">The date of birth.</param>
-            <returns>The array of records with the same date of birth.</returns>
-        </member>
         <member name="M:FileCabinetApp.FileCabinetCustomService.ValidateParameters(FileCabinetApp.RecordDataArgs)">
             <summary>
             Validates record's data using default criteria.
@@ -81,63 +24,6 @@
             <summary>
             This class stores default validation criteria for record's data.
             </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.CreateRecord(FileCabinetApp.RecordDataArgs)">
-            <summary>
-            Creates a new record.
-            </summary>
-            <param name="recordData">The data of a new record.</param>
-            <returns>The unique Id of the created record.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.GetRecords">
-            <summary>
-            Gets all records.
-            </summary>
-            <returns>The array of all records.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.GetRecord(System.Int32)">
-            <summary>
-            Gets a record with a specific Id.
-            </summary>
-            <param name="id">The Id of a record.</param>
-            <returns>The record with a matching Id.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.GetStat">
-            <summary>
-            Gets the amount of records.
-            </summary>
-            <returns>The amount of records.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.EditRecord(System.Int32,FileCabinetApp.RecordDataArgs)">
-            <summary>
-            Edits a record with a specific Id.
-            </summary>
-            <param name="id">The Id of the record.</param>
-            <param name="recordData">The data of a new record.</param>
-            <exception cref="T:System.ArgumentNullException">Thrown if "record" is null.</exception>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.FindByFirstName(System.String)">
-            <summary>
-            Finds records with the same first name.
-            </summary>
-            <param name="firstName">The first name.</param>
-            <returns>The array of records with the same first name.</returns>
-            <exception cref="T:System.ArgumentNullException">Thrown if the parameter "firstName" is null or contains only white spaces.</exception>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.FindByLastName(System.String)">
-            <summary>
-            Finds records with the same last name.
-            </summary>
-            <param name="lastName">The last name.</param>
-            <returns>The array of records with the same last name.</returns>
-            <exception cref="T:System.ArgumentNullException">Thrown if the parameter "lastName" is null or contains only white spaces.</exception>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.FindByDateOfBirth(System.DateTime)">
-            <summary>
-            Finds records with the same date of birth.
-            </summary>
-            <param name="dateOfBirth">The date of birth.</param>
-            <returns>The array of records with the same date of birth.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetDefaultService.ValidateParameters(FileCabinetApp.RecordDataArgs)">
             <summary>
