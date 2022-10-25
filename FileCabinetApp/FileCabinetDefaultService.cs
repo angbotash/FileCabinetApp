@@ -5,6 +5,14 @@
     /// </summary>
     public class FileCabinetDefaultService : FileCabinetService
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCabinetDefaultService"/> class.
+        /// </summary>
+        public FileCabinetDefaultService()
+            : base(new DefaultValidator())
+        {
+        }
+
         // private const char GenderFemale = 'F';
         // private const char GenderMale = 'M';
         // private const char GenderNotSpecified = 'N';
@@ -61,13 +69,13 @@
         //    }
         // }
 
-        /// <summary>
-        /// Returns an instance of <see cref="DefaultValidator"></see> with record validation method.
-        /// </summary>
-        /// <returns>An instance of <see cref="DefaultValidator"></see> with record validation method.</returns>
-        protected override IRecordValidator CreateValidator()
-        {
-            return new DefaultValidator();
-        }
+        ///// <summary>
+        ///// Returns an instance of <see cref="DefaultValidator"></see> with record validation method.
+        ///// </summary>
+        ///// <returns>An instance of <see cref="DefaultValidator"></see> with record validation method.</returns>
+        // protected override IRecordValidator CreateValidator()
+        // {
+        //    return new DefaultValidator();
+        // }
     }
 }

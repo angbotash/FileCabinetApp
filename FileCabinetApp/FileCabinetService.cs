@@ -15,6 +15,16 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> _firstNameDictionary = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> _lastNameDictionary = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> _dateOfBirthDictionary = new ();
+        private readonly IRecordValidator _validator;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCabinetService"/> class.
+        /// </summary>
+        /// <param name="validator">Validator type.</param>
+        protected FileCabinetService(IRecordValidator validator)
+        {
+            this._validator = validator;
+        }
 
         /// <summary>
         /// Creates a new record.
@@ -23,7 +33,8 @@ namespace FileCabinetApp
         /// <returns>The unique Id of the created record.</returns>
         public virtual int CreateRecord(RecordDataArgs recordData)
         {
-            this.CreateValidator().ValidateParameters(recordData);
+            // this.CreateValidator().ValidateParameters(recordData);
+            this._validator.ValidateParameters(recordData);
 
             var record = new FileCabinetRecord
             {
@@ -99,7 +110,8 @@ namespace FileCabinetApp
                 throw new ArgumentException($"There is no record with this Id - {id}");
             }
 
-            this.CreateValidator().ValidateParameters(recordData);
+            // this.CreateValidator().ValidateParameters(recordData);
+            this._validator.ValidateParameters(recordData);
 
             var updatedRecord = new FileCabinetRecord()
             {
@@ -201,11 +213,11 @@ namespace FileCabinetApp
         ///// <exception cref="ArgumentException">Thrown if the parameter "Gender" is not equal 'F', 'M' or 'N'.</exception>
         // protected abstract void ValidateParameters(RecordDataArgs recordData);
 
-        /// <summary>
-        /// Returns an instance of a class with record validation method.
-        /// </summary>
-        /// <returns>An instance of a class with record validation method.</returns>
-        protected abstract IRecordValidator CreateValidator();
+        ///// <summary>
+        ///// Returns an instance of a class with record validation method.
+        ///// </summary>
+        ///// <returns>An instance of a class with record validation method.</returns>
+        // protected abstract IRecordValidator CreateValidator();
 
         // Dictionary methods
         private static void AddRecordToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, FileCabinetRecord record, string key)

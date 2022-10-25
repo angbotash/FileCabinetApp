@@ -5,6 +5,14 @@
     /// </summary>
     public class FileCabinetCustomService : FileCabinetService
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCabinetCustomService"/> class.
+        /// </summary>
+        public FileCabinetCustomService()
+            : base(new CustomValidator())
+        {
+        }
+
         // private const char GenderFemale = 'F';
         // private const char GenderMale = 'M';
         ///// <summary>
@@ -59,13 +67,13 @@
         //    }
         // }
 
-        /// <summary>
-        /// Returns an instance of <see cref="CustomValidator"></see> with record validation method.
-        /// </summary>
-        /// <returns>An instance of <see cref="CustomValidator"></see> with record validation method.</returns>
-        protected override IRecordValidator CreateValidator()
-        {
-            return new CustomValidator();
-        }
+        ///// <summary>
+        ///// Returns an instance of <see cref="CustomValidator"></see> with record validation method.
+        ///// </summary>
+        ///// <returns>An instance of <see cref="CustomValidator"></see> with record validation method.</returns>
+        // protected override IRecordValidator CreateValidator()
+        // {
+        //    return new CustomValidator();
+        // }
     }
 }
