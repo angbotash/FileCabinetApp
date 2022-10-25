@@ -4,12 +4,12 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
-        <member name="T:FileCabinetApp.FileCabinetCustomService">
+        <member name="T:FileCabinetApp.CustomValidator">
             <summary>
             This class stores custom validation criteria for record's data.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.ValidateParameters(FileCabinetApp.RecordDataArgs)">
+        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.RecordDataArgs)">
             <summary>
             Validates record's data using default criteria.
             </summary>
@@ -20,12 +20,12 @@
             <exception cref="T:System.ArgumentException">Thrown if the parameters "AreaCode" and "Savings" are less than 0.</exception>
             <exception cref="T:System.ArgumentException">Thrown if the parameter "Gender" is not equal 'F' or 'M'.</exception>
         </member>
-        <member name="T:FileCabinetApp.FileCabinetDefaultService">
+        <member name="T:FileCabinetApp.DefaultValidator">
             <summary>
             This class stores default validation criteria for record's data.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.ValidateParameters(FileCabinetApp.RecordDataArgs)">
+        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.RecordDataArgs)">
             <summary>
             Validates record's data using default criteria.
             </summary>
@@ -35,6 +35,28 @@
             <exception cref="T:System.ArgumentException">Thrown if the parameter "DateOfBirth" is earlier than 01.01.1950 or later than the current date.</exception>
             <exception cref="T:System.ArgumentException">Thrown if the parameters "AreaCode" and "Savings" are less than 0.</exception>
             <exception cref="T:System.ArgumentException">Thrown if the parameter "Gender" is not equal 'F', 'M' or 'N'.</exception>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetCustomService">
+            <summary>
+            This class stores custom validation criteria for record's data.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetCustomService.CreateValidator">
+            <summary>
+            Returns an instance of <see cref="T:FileCabinetApp.CustomValidator"></see> with record validation method.
+            </summary>
+            <returns>An instance of <see cref="T:FileCabinetApp.CustomValidator"></see> with record validation method.</returns>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetDefaultService">
+            <summary>
+            This class stores default validation criteria for record's data.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.CreateValidator">
+            <summary>
+            Returns an instance of <see cref="T:FileCabinetApp.DefaultValidator"></see> with record validation method.
+            </summary>
+            <returns>An instance of <see cref="T:FileCabinetApp.DefaultValidator"></see> with record validation method.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -145,16 +167,22 @@
             <param name="dateOfBirth">The date of birth.</param>
             <returns>The array of records with the same date of birth.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.ValidateParameters(FileCabinetApp.RecordDataArgs)">
+        <member name="M:FileCabinetApp.FileCabinetService.CreateValidator">
+            <summary>
+            Returns an instance of a class with record validation method.
+            </summary>
+            <returns>An instance of a class with record validation method.</returns>
+        </member>
+        <member name="T:FileCabinetApp.IRecordValidator">
+            <summary>
+            Declares a validation method for record's data.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters(FileCabinetApp.RecordDataArgs)">
             <summary>
             Validates record's data.
             </summary>
             <param name="recordData">The data of a new record.</param>
-            <exception cref="T:System.ArgumentNullException">Thrown if the parameters "FirstName" or "lastName" are null or contain only white spaces.</exception>
-            <exception cref="T:System.ArgumentException">Thrown if the parameters "FirstName" or "LastName" shorter than 2 characters or longer than 60 characters.</exception>
-            <exception cref="T:System.ArgumentException">Thrown if the parameter "DateOfBirth" is earlier than 01.01.1950 or later than the current date.</exception>
-            <exception cref="T:System.ArgumentException">Thrown if the parameters "AreaCode" and "Savings" are less than 0.</exception>
-            <exception cref="T:System.ArgumentException">Thrown if the parameter "Gender" is not equal 'F', 'M' or 'N'.</exception>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
