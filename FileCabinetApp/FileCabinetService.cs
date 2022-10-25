@@ -33,7 +33,6 @@ namespace FileCabinetApp
         /// <returns>The unique Id of the created record.</returns>
         public virtual int CreateRecord(RecordDataArgs recordData)
         {
-            // this.CreateValidator().ValidateParameters(recordData);
             this._validator.ValidateParameters(recordData);
 
             var record = new FileCabinetRecord
@@ -110,7 +109,6 @@ namespace FileCabinetApp
                 throw new ArgumentException($"There is no record with this Id - {id}");
             }
 
-            // this.CreateValidator().ValidateParameters(recordData);
             this._validator.ValidateParameters(recordData);
 
             var updatedRecord = new FileCabinetRecord()
@@ -201,23 +199,6 @@ namespace FileCabinetApp
 
             return Array.Empty<FileCabinetRecord>();
         }
-
-        ///// <summary>
-        ///// Validates record's data.
-        ///// </summary>
-        ///// <param name="recordData">The data of a new record.</param>
-        ///// <exception cref="ArgumentNullException">Thrown if the parameters "FirstName" or "lastName" are null or contain only white spaces.</exception>
-        ///// <exception cref="ArgumentException">Thrown if the parameters "FirstName" or "LastName" shorter than 2 characters or longer than 60 characters.</exception>
-        ///// <exception cref="ArgumentException">Thrown if the parameter "DateOfBirth" is earlier than 01.01.1950 or later than the current date.</exception>
-        ///// <exception cref="ArgumentException">Thrown if the parameters "AreaCode" and "Savings" are less than 0.</exception>
-        ///// <exception cref="ArgumentException">Thrown if the parameter "Gender" is not equal 'F', 'M' or 'N'.</exception>
-        // protected abstract void ValidateParameters(RecordDataArgs recordData);
-
-        ///// <summary>
-        ///// Returns an instance of a class with record validation method.
-        ///// </summary>
-        ///// <returns>An instance of a class with record validation method.</returns>
-        // protected abstract IRecordValidator CreateValidator();
 
         // Dictionary methods
         private static void AddRecordToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, FileCabinetRecord record, string key)

@@ -41,22 +41,20 @@
             This class stores custom validation criteria for record's data.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.CreateValidator">
+        <member name="M:FileCabinetApp.FileCabinetCustomService.#ctor">
             <summary>
-            Returns an instance of <see cref="T:FileCabinetApp.CustomValidator"></see> with record validation method.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetCustomService"/> class.
             </summary>
-            <returns>An instance of <see cref="T:FileCabinetApp.CustomValidator"></see> with record validation method.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetDefaultService">
             <summary>
             This class stores default validation criteria for record's data.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.CreateValidator">
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.#ctor">
             <summary>
-            Returns an instance of <see cref="T:FileCabinetApp.DefaultValidator"></see> with record validation method.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetDefaultService"/> class.
             </summary>
-            <returns>An instance of <see cref="T:FileCabinetApp.DefaultValidator"></see> with record validation method.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -109,6 +107,12 @@
             <summary>
             The service class for the <see cref="T:FileCabinetApp.FileCabinetRecord"/>.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.#ctor(FileCabinetApp.IRecordValidator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetService"/> class.
+            </summary>
+            <param name="validator">Validator type.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.RecordDataArgs)">
             <summary>
@@ -166,12 +170,6 @@
             </summary>
             <param name="dateOfBirth">The date of birth.</param>
             <returns>The array of records with the same date of birth.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateValidator">
-            <summary>
-            Returns an instance of a class with record validation method.
-            </summary>
-            <returns>An instance of a class with record validation method.</returns>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
