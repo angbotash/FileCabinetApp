@@ -105,7 +105,7 @@
         </member>
         <member name="T:FileCabinetApp.FileCabinetService">
             <summary>
-            The service class for the <see cref="T:FileCabinetApp.FileCabinetRecord"/>.
+            <inheritdoc cref="T:FileCabinetApp.IFileCabinetService"/>
             </summary>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.#ctor(FileCabinetApp.IRecordValidator)">
@@ -165,6 +165,65 @@
             <exception cref="T:System.ArgumentNullException">Thrown if the parameter "lastName" is null or contains only white spaces.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.FindByDateOfBirth(System.DateTime)">
+            <summary>
+            Finds records with the same date of birth.
+            </summary>
+            <param name="dateOfBirth">The date of birth.</param>
+            <returns>The array of records with the same date of birth.</returns>
+        </member>
+        <member name="T:FileCabinetApp.IFileCabinetService">
+            <summary>
+            This interface describes all the methods for <see cref="T:FileCabinetApp.FileCabinetRecord"/>.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.RecordDataArgs)">
+            <summary>
+            Creates a new record.
+            </summary>
+            <param name="recordData">The data of a new record.</param>
+            <returns>The unique Id of the created record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetRecords">
+            <summary>
+            Gets all records.
+            </summary>
+            <returns>The array of all records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetRecord(System.Int32)">
+            <summary>
+            Gets a record with a specific Id.
+            </summary>
+            <param name="id">The Id of a record.</param>
+            <returns>The record with a matching Id.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetStat">
+            <summary>
+            Gets the amount of records.
+            </summary>
+            <returns>The amount of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordDataArgs)">
+            <summary>
+            Edits a record with a specific Id.
+            </summary>
+            <param name="id">The Id of the record.</param>
+            <param name="recordData">The data of a new record.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
+            <summary>
+            Finds records with the same first name.
+            </summary>
+            <param name="firstName">The first name.</param>
+            <returns>The array of records with the same first name.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByLastName(System.String)">
+            <summary>
+            Finds records with the same last name.
+            </summary>
+            <param name="lastName">The last name.</param>
+            <returns>The array of records with the same last name.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByDateOfBirth(System.DateTime)">
             <summary>
             Finds records with the same date of birth.
             </summary>

@@ -26,7 +26,7 @@ namespace FileCabinetApp
         private const string ValidationCustomRule = "CUSTOM";
         private const string ValidationDefaultRule = "DEFAULT";
 
-        private static FileCabinetService fileCabinetService;
+        private static IFileCabinetService fileCabinetService;
 
         private static bool isRunning = true;
 

@@ -6,9 +6,9 @@ using System.Globalization;
 namespace FileCabinetApp
 {
     /// <summary>
-    /// The service class for the <see cref="FileCabinetRecord"/>.
+    /// <inheritdoc cref="IFileCabinetService"/>
     /// </summary>
-    public abstract class FileCabinetService
+    public abstract class FileCabinetService : IFileCabinetService
     {
         private const string DateTimeFormat = "M/d/yyyy";
 
