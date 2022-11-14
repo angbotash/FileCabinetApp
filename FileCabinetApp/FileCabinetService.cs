@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.ObjectModel;
+using System.Globalization;
 
 #pragma warning disable SA1309 // Field names should not begin with underscore
 
@@ -61,16 +62,16 @@ namespace FileCabinetApp
         /// Gets all records.
         /// </summary>
         /// <returns>The array of all records.</returns>
-        public virtual FileCabinetRecord[] GetRecords()
+        public virtual ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            var records = new FileCabinetRecord[this._list.Count];
+            var records = new List<FileCabinetRecord>();
 
-            for (int i = 0; i < this._list.Count; i++)
+            foreach (var rec in this._list)
             {
-                records[i] = this._list[i];
+                records.Add(rec);
             }
 
-            return records;
+            return new ReadOnlyCollection<FileCabinetRecord>(records);
         }
 
         /// <summary>
@@ -143,21 +144,24 @@ namespace FileCabinetApp
         /// <param name="firstName">The first name.</param>
         /// <returns>The array of records with the same first name.</returns>
         /// <exception cref="ArgumentNullException">Thrown if the parameter "firstName" is null or contains only white spaces.</exception>
-        public virtual FileCabinetRecord[] FindByFirstName(string firstName)
+        public virtual ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (string.IsNullOrWhiteSpace(firstName))
             {
                 throw new ArgumentNullException(nameof(firstName), "First name cannot be null or white space.");
             }
 
+            var resultsFirstName = new List<FileCabinetRecord>();
             var firstNameUpperCase = firstName.ToUpperInvariant();
 
             if (this._firstNameDictionary.ContainsKey(firstNameUpperCase))
             {
-                return this._firstNameDictionary[firstNameUpperCase].ToArray();
+                resultsFirstName = this._firstNameDictionary[firstNameUpperCase];
+
+                return new ReadOnlyCollection<FileCabinetRecord>(resultsFirstName);
             }
 
-            return Array.Empty<FileCabinetRecord>();
+            return new ReadOnlyCollection<FileCabinetRecord>(resultsFirstName);
         }
 
         /// <summary>
@@ -166,21 +170,24 @@ namespace FileCabinetApp
         /// <param name="lastName">The last name.</param>
         /// <returns>The array of records with the same last name.</returns>
         /// <exception cref="ArgumentNullException">Thrown if the parameter "lastName" is null or contains only white spaces.</exception>
-        public virtual FileCabinetRecord[] FindByLastName(string lastName)
+        public virtual ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (string.IsNullOrWhiteSpace(lastName))
             {
                 throw new ArgumentNullException(nameof(lastName), "Last name cannot be null or white space.");
             }
 
+            var resultsLastName = new List<FileCabinetRecord>();
             var lastNameUpperCase = lastName.ToUpperInvariant();
 
             if (this._lastNameDictionary.ContainsKey(lastNameUpperCase))
             {
-                return this._lastNameDictionary[lastNameUpperCase].ToArray();
+                resultsLastName = this._lastNameDictionary[lastNameUpperCase];
+
+                return new ReadOnlyCollection<FileCabinetRecord>(resultsLastName);
             }
 
-            return Array.Empty<FileCabinetRecord>();
+            return new ReadOnlyCollection<FileCabinetRecord>(resultsLastName);
         }
 
         /// <summary>
@@ -188,16 +195,19 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="dateOfBirth">The date of birth.</param>
         /// <returns>The array of records with the same date of birth.</returns>
-        public virtual FileCabinetRecord[] FindByDateOfBirth(DateTime dateOfBirth)
+        public virtual ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
             var dateOfBirthKey = dateOfBirth.ToString(DateTimeFormat, CultureInfo.InvariantCulture);
+            var resultsDateOfBirth = new List<FileCabinetRecord>();
 
             if (this._dateOfBirthDictionary.ContainsKey(dateOfBirthKey))
             {
-                return this._dateOfBirthDictionary[dateOfBirthKey].ToArray();
+                resultsDateOfBirth = this._dateOfBirthDictionary[dateOfBirthKey];
+
+                return new ReadOnlyCollection<FileCabinetRecord>(resultsDateOfBirth);
             }
 
-            return Array.Empty<FileCabinetRecord>();
+            return new ReadOnlyCollection<FileCabinetRecord>(resultsDateOfBirth);
         }
 
         // Dictionary methods

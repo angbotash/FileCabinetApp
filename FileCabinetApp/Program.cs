@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.ObjectModel;
+using System.Globalization;
 
 #pragma warning disable CA1309 // Use ordinal string comparison
 
@@ -471,9 +472,9 @@ namespace FileCabinetApp
         }
 
         // Prints records
-        private static void PrintRecords(FileCabinetRecord[] records)
+        private static void PrintRecords(ReadOnlyCollection<FileCabinetRecord> records)
         {
-            if (records.Length == 0)
+            if (records.Count == 0)
             {
                 Console.WriteLine("No records found.");
                 return;
