@@ -36,6 +36,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
+            new Tuple<string, Action<string>>("export", Export),
         };
 
         private static string[][] helpMessages =
@@ -53,6 +54,7 @@ namespace FileCabinetApp
                 "The 'find lastname 'last name'' command finds existing records by the last name.\n" +
                 "The 'find dateofbirth 'date of birth'' command finds existing records by the date of birth.",
             },
+            new[] { "export", "exports records", "The 'export' command exports records into a CSV file." },
         };
 
         /// <summary>
@@ -275,6 +277,60 @@ namespace FileCabinetApp
             }
         }
 
+        private static void Export(string parameters)
+        {
+            GetExportData(parameters, out var exportCategory, out var filePath);
+
+            if (string.IsNullOrWhiteSpace(exportCategory) || string.IsNullOrWhiteSpace(filePath))
+            {
+                Console.WriteLine("Please enter a file type and a file name.");
+                return;
+            }
+
+            if (File.Exists(filePath))
+            {
+                Console.Write($"File exists - rewrite {filePath}? [Y/n] ");
+
+                var yesOrNo = GetYesOrNo();
+
+                switch (yesOrNo)
+                {
+                    case true:
+                        ExportToCsv(filePath);
+                        break;
+
+                    case false:
+                        break;
+                }
+            }
+            else
+            {
+                ExportToCsv(filePath);
+            }
+        }
+
+        private static void ExportToCsv(string filePath)
+        {
+            try
+            {
+                FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                stream.Close();
+            }
+            catch (IOException)
+            {
+                Console.WriteLine($"Export failed: can't open file {filePath}.");
+                return;
+            }
+
+            var writer = new StreamWriter(filePath);
+            var snapshot = fileCabinetService.MakeSnapshot();
+
+            snapshot.SaveToCsv(writer);
+            writer.Close();
+
+            Console.WriteLine($"All records are exported to file {filePath}.");
+        }
+
         // Validation rule input check
         private static string GetValidationRuleMessage(string[] args)
         {
@@ -370,7 +426,8 @@ namespace FileCabinetApp
 
             if (validParameters)
             {
-                bool validRecordData = !string.IsNullOrWhiteSpace(searchData[0]) && !string.IsNullOrWhiteSpace(searchData[1]);
+                bool validRecordData = !string.IsNullOrWhiteSpace(searchData[0]) &&
+                                       !string.IsNullOrWhiteSpace(searchData[1]);
 
                 if (validRecordData)
                 {
@@ -378,6 +435,63 @@ namespace FileCabinetApp
                     recordData = searchData[1];
                 }
             }
+        }
+
+        // Process user input data in Export method
+        private static void GetExportData(string parameters, out string? exportCategory, out string? filePath)
+        {
+            exportCategory = null;
+            filePath = null;
+            int exportDataItems = 2;
+            var exportData = parameters.Split(' ', exportDataItems);
+            bool validParameters = !string.IsNullOrWhiteSpace(parameters) && exportData.Length == exportDataItems;
+
+            if (validParameters)
+            {
+                bool validExportData = !string.IsNullOrWhiteSpace(exportData[0]) &&
+                                       !string.IsNullOrWhiteSpace(exportData[1]);
+
+                if (validExportData)
+                {
+                    exportCategory = exportData[0].ToUpperInvariant();
+                    filePath = exportData[1];
+                }
+            }
+        }
+
+        // Gets 'yes' or 'no' for Export method
+        private static bool GetYesOrNo()
+        {
+            var correctAnswerFormat = true;
+            bool answer = false;
+
+            do
+            {
+                var answerString = Console.ReadLine();
+                var parse = char.TryParse(answerString, out char charAnswer);
+
+                if (!parse || (char.ToUpperInvariant(charAnswer) != 'Y' && char.ToUpperInvariant(charAnswer) != 'N'))
+                {
+                    correctAnswerFormat = false;
+                    Console.WriteLine("Please enter 'yes' or 'no' - Y or N.");
+                    continue;
+                }
+
+                if (char.ToUpperInvariant(charAnswer) == 'Y')
+                {
+                    correctAnswerFormat = true;
+                    answer = true;
+                }
+
+                if (char.ToUpperInvariant(charAnswer) == 'N')
+                {
+                    correctAnswerFormat = true;
+                    answer = false;
+                }
+            }
+            while (!correctAnswerFormat);
+
+            return answer;
         }
 
         // Input validation

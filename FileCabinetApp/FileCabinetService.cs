@@ -210,6 +210,15 @@ namespace FileCabinetApp
             return new ReadOnlyCollection<FileCabinetRecord>(resultsDateOfBirth);
         }
 
+        /// <summary>
+        /// Makes a snapshot of a record.
+        /// </summary>
+        /// <returns>An instance of <see cref="FileCabinetServiceSnapshot"/>.</returns>
+        public virtual FileCabinetServiceSnapshot MakeSnapshot()
+        {
+            return new FileCabinetServiceSnapshot(this._list);
+        }
+
         // Dictionary methods
         private static void AddRecordToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, FileCabinetRecord record, string key)
         {
