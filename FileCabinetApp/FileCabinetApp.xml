@@ -4,5 +4,530 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.CustomValidator">
+            <summary>
+            This class stores custom validation criteria for record's data.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.RecordDataArgs)">
+            <summary>
+            Validates record's data using default criteria.
+            </summary>
+            <param name="recordData">The data of a new record.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the parameters "FirstName" or "lastName" are null or contain only white spaces.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameters "FirstName" or "LastName" shorter than 2 characters or longer than 30 characters.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameter "DateOfBirth" is earlier than 01.01.1920 or later than the current date.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameters "AreaCode" and "Savings" are less than 0.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameter "Gender" is not equal 'F' or 'M'.</exception>
+        </member>
+        <member name="T:FileCabinetApp.DefaultValidator">
+            <summary>
+            This class stores default validation criteria for record's data.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.RecordDataArgs)">
+            <summary>
+            Validates record's data using default criteria.
+            </summary>
+            <param name="recordData">The data of a new record.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the parameters "FirstName" or "lastName" are null or contain only white spaces.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameters "FirstName" or "LastName" shorter than 2 characters or longer than 60 characters.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameter "DateOfBirth" is earlier than 01.01.1950 or later than the current date.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameters "AreaCode" and "Savings" are less than 0.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the parameter "Gender" is not equal 'F', 'M' or 'N'.</exception>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetCustomService">
+            <summary>
+            This class stores custom validation criteria for record's data.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetCustomService.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetCustomService"/> class.
+            </summary>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetDefaultService">
+            <summary>
+            This class stores default validation criteria for record's data.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetDefaultService"/> class.
+            </summary>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetRecord">
+            <summary>
+            This class represents a record with personal information about a person.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Id">
+            <summary>
+            Gets or sets the Id of a record.
+            </summary>
+            <value>The Id of a record.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.FirstName">
+            <summary>
+            Gets or sets the person's first name.
+            </summary>
+            <value>The person's first name.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.LastName">
+            <summary>
+            Gets or sets the person's last name.
+            </summary>
+            <value>The person's last name.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.DateOfBirth">
+            <summary>
+            Gets or sets the person's date of birth.
+            </summary>
+            <value>The person's date of birth.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.AreaCode">
+            <summary>
+            Gets or sets the area code of the person's phone number.
+            </summary>
+            <value>The area code of a person's phone number.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Savings">
+            <summary>
+            Gets or sets the person's amount of savings.
+            </summary>
+            <value>The person's amount of savings.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Gender">
+            <summary>
+            Gets or sets the person's gender.
+            </summary>
+            <value>The person's gender.</value>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetService">
+            <summary>
+            <inheritdoc cref="T:FileCabinetApp.IFileCabinetService"/>
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.#ctor(FileCabinetApp.IRecordValidator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetService"/> class.
+            </summary>
+            <param name="validator">Validator type.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.RecordDataArgs)">
+            <summary>
+            Creates a new record.
+            </summary>
+            <param name="recordData">The data of a new record.</param>
+            <returns>The unique Id of the created record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetRecords">
+            <summary>
+            Gets all records.
+            </summary>
+            <returns>The array of all records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetRecord(System.Int32)">
+            <summary>
+            Gets a record with a specific Id.
+            </summary>
+            <param name="id">The Id of a record.</param>
+            <returns>The record with a matching Id.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetStat">
+            <summary>
+            Gets the amount of records.
+            </summary>
+            <returns>The amount of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordDataArgs)">
+            <summary>
+            Edits a record with a specific Id.
+            </summary>
+            <param name="id">The Id of the record.</param>
+            <param name="recordData">The data of a new record.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if "record" is null.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByFirstName(System.String)">
+            <summary>
+            Finds records with the same first name.
+            </summary>
+            <param name="firstName">The first name.</param>
+            <returns>The array of records with the same first name.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if the parameter "firstName" is null or contains only white spaces.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByLastName(System.String)">
+            <summary>
+            Finds records with the same last name.
+            </summary>
+            <param name="lastName">The last name.</param>
+            <returns>The array of records with the same last name.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if the parameter "lastName" is null or contains only white spaces.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByDateOfBirth(System.DateTime)">
+            <summary>
+            Finds records with the same date of birth.
+            </summary>
+            <param name="dateOfBirth">The date of birth.</param>
+            <returns>The array of records with the same date of birth.</returns>
+        </member>
+        <member name="T:FileCabinetApp.IFileCabinetService">
+            <summary>
+            This interface describes all the methods for <see cref="T:FileCabinetApp.FileCabinetRecord"/>.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.RecordDataArgs)">
+            <summary>
+            Creates a new record.
+            </summary>
+            <param name="recordData">The data of a new record.</param>
+            <returns>The unique Id of the created record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetRecords">
+            <summary>
+            Gets all records.
+            </summary>
+            <returns>The array of all records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetRecord(System.Int32)">
+            <summary>
+            Gets a record with a specific Id.
+            </summary>
+            <param name="id">The Id of a record.</param>
+            <returns>The record with a matching Id.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetStat">
+            <summary>
+            Gets the amount of records.
+            </summary>
+            <returns>The amount of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordDataArgs)">
+            <summary>
+            Edits a record with a specific Id.
+            </summary>
+            <param name="id">The Id of the record.</param>
+            <param name="recordData">The data of a new record.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
+            <summary>
+            Finds records with the same first name.
+            </summary>
+            <param name="firstName">The first name.</param>
+            <returns>The array of records with the same first name.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByLastName(System.String)">
+            <summary>
+            Finds records with the same last name.
+            </summary>
+            <param name="lastName">The last name.</param>
+            <returns>The array of records with the same last name.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByDateOfBirth(System.DateTime)">
+            <summary>
+            Finds records with the same date of birth.
+            </summary>
+            <param name="dateOfBirth">The date of birth.</param>
+            <returns>The array of records with the same date of birth.</returns>
+        </member>
+        <member name="T:FileCabinetApp.InputValidation.CustomInputValidator">
+            <summary>
+            <inheritdoc cref="T:FileCabinetApp.InputValidation.IInputValidator"/>
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.NameConverter(System.String)">
+            <summary>
+            Converts name.
+            </summary>
+            <param name="nameInput">Name input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.DateConverter(System.String)">
+            <summary>
+            Converts date of birth from string to DateTime.
+            </summary>
+            <param name="dateInput">Date of birth input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.AreaCodeConverter(System.String)">
+            <summary>
+            Converts area code from string to short.
+            </summary>
+            <param name="areCodeInput">Area code input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.SavingsConverter(System.String)">
+            <summary>
+            Converts savings from string to decimal.
+            </summary>
+            <param name="savingsInput">Amount of savings input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.GenderConverter(System.String)">
+            <summary>
+            Converts gender from string to char.
+            </summary>
+            <param name="genderInput">Gender input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.NameValidator(System.String)">
+            <summary>
+            Validated converted name.
+            </summary>
+            <param name="nameInput">Converted name input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.DateValidator(System.DateTime)">
+            <summary>
+            Validates converted date of birth.
+            </summary>
+            <param name="dateInput">Converted date of birth input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.AreaCodeValidator(System.Int16)">
+            <summary>
+            Validates converted area code.
+            </summary>
+            <param name="areCodeInput">Converted area code input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.SavingsValidator(System.Decimal)">
+            <summary>
+            Validates converted savings.
+            </summary>
+            <param name="savingsInput">Converted savings input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.GenderValidator(System.Char)">
+            <summary>
+            Validates converted gender.
+            </summary>
+            <param name="genderInput">Converted gender input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="T:FileCabinetApp.InputValidation.DefaultInputValidator">
+            <summary>
+            <inheritdoc cref="T:FileCabinetApp.InputValidation.IInputValidator"/>
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.NameConverter(System.String)">
+            <summary>
+            Converts name.
+            </summary>
+            <param name="nameInput">Name input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.DateConverter(System.String)">
+            <summary>
+            Converts date of birth from string to DateTime.
+            </summary>
+            <param name="dateInput">Date of birth input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.AreaCodeConverter(System.String)">
+            <summary>
+            Converts area code from string to short.
+            </summary>
+            <param name="areCodeInput">Area code input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.SavingsConverter(System.String)">
+            <summary>
+            Converts savings from string to decimal.
+            </summary>
+            <param name="savingsInput">Amount of savings input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.GenderConverter(System.String)">
+            <summary>
+            Converts gender from string to char.
+            </summary>
+            <param name="genderInput">Gender input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.NameValidator(System.String)">
+            <summary>
+            Validated converted name.
+            </summary>
+            <param name="nameInput">Converted name input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.DateValidator(System.DateTime)">
+            <summary>
+            Validates converted date of birth.
+            </summary>
+            <param name="dateInput">Converted date of birth input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.AreaCodeValidator(System.Int16)">
+            <summary>
+            Validates converted area code.
+            </summary>
+            <param name="areCodeInput">Converted area code input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.SavingsValidator(System.Decimal)">
+            <summary>
+            Validates converted savings.
+            </summary>
+            <param name="savingsInput">Converted savings input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.GenderValidator(System.Char)">
+            <summary>
+            Validates converted gender.
+            </summary>
+            <param name="genderInput">Converted gender input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="T:FileCabinetApp.InputValidation.IInputValidator">
+            <summary>
+            Declares validation methods for input data.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.NameConverter(System.String)">
+            <summary>
+            Converts name.
+            </summary>
+            <param name="nameInput">Name input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.DateConverter(System.String)">
+            <summary>
+            Converts date of birth from string to DateTime.
+            </summary>
+            <param name="dateInput">Date of birth input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.AreaCodeConverter(System.String)">
+            <summary>
+            Converts area code from string to short.
+            </summary>
+            <param name="areCodeInput">Area code input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.SavingsConverter(System.String)">
+            <summary>
+            Converts savings from string to decimal.
+            </summary>
+            <param name="savingsInput">Amount of savings input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.GenderConverter(System.String)">
+            <summary>
+            Converts gender from string to char.
+            </summary>
+            <param name="genderInput">Gender input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.NameValidator(System.String)">
+            <summary>
+            Validated converted name.
+            </summary>
+            <param name="nameInput">Converted name input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.DateValidator(System.DateTime)">
+            <summary>
+            Validates converted date of birth.
+            </summary>
+            <param name="dateInput">Converted date of birth input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.AreaCodeValidator(System.Int16)">
+            <summary>
+            Validates converted area code.
+            </summary>
+            <param name="areCodeInput">Converted area code input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.SavingsValidator(System.Decimal)">
+            <summary>
+            Validates converted savings.
+            </summary>
+            <param name="savingsInput">Converted savings input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.GenderValidator(System.Char)">
+            <summary>
+            Validates converted gender.
+            </summary>
+            <param name="genderInput">Converted gender input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="T:FileCabinetApp.IRecordValidator">
+            <summary>
+            Declares a validation method for record's data.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters(FileCabinetApp.RecordDataArgs)">
+            <summary>
+            Validates record's data.
+            </summary>
+            <param name="recordData">The data of a new record.</param>
+        </member>
+        <member name="T:FileCabinetApp.Program">
+            <summary>
+            This class contains the entry point of the application.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Program.Main(System.String[])">
+            <summary>
+            Entry point of the application.
+            </summary>
+            <param name="args">The command line arguments.</param>
+        </member>
+        <member name="T:FileCabinetApp.RecordDataArgs">
+            <summary>
+            This class represents the parameters for methods in  <see cref="T:FileCabinetApp.FileCabinetRecord"/>.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.RecordDataArgs.#ctor(System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.RecordDataArgs"/> class.
+            </summary>
+            <param name="firstName">The first name.</param>
+            <param name="lastName"> The last name.</param>
+            <param name="dateOfBirth">The date of birth.</param>
+            <param name="areaCode">The area code of a phone number.</param>
+            <param name="savings">The amount of savings.</param>
+            <param name="gender">The person's gender.</param>
+        </member>
+        <member name="P:FileCabinetApp.RecordDataArgs.FirstName">
+            <summary>
+            Gets the person's first name.
+            </summary>
+            <value>The person's first name.</value>
+        </member>
+        <member name="P:FileCabinetApp.RecordDataArgs.LastName">
+            <summary>
+            Gets the person's last name.
+            </summary>
+            <value>The person's last name.</value>
+        </member>
+        <member name="P:FileCabinetApp.RecordDataArgs.DateOfBirth">
+            <summary>
+            Gets the person's date of birth.
+            </summary>
+            <value>The person's date of birth.</value>
+        </member>
+        <member name="P:FileCabinetApp.RecordDataArgs.AreaCode">
+            <summary>
+            Gets the area code of the person's phone number.
+            </summary>
+            <value>The area code of a person's phone number.</value>
+        </member>
+        <member name="P:FileCabinetApp.RecordDataArgs.Savings">
+            <summary>
+            Gets the person's amount of savings.
+            </summary>
+            <value>The person's amount of savings.</value>
+        </member>
+        <member name="P:FileCabinetApp.RecordDataArgs.Gender">
+            <summary>
+            Gets the person's gender.
+            </summary>
+            <value>The person's gender.</value>
+        </member>
     </members>
 </doc>
