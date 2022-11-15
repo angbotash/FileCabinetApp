@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FileCabinetApp
+﻿namespace FileCabinetApp
 {
     /// <summary>
     /// This class stores custom validation criteria for record's data.
@@ -45,7 +39,7 @@ namespace FileCabinetApp
                 throw new ArgumentException("Last name cannot be shorter than 2 characters and longer than 30 characters.");
             }
 
-            if (recordData.DateOfBirth < new DateTime(1950, 1, 1) || recordData.DateOfBirth > DateTime.Today)
+            if (recordData.DateOfBirth < new DateTime(1920, 1, 1) || recordData.DateOfBirth > DateTime.Today)
             {
                 throw new ArgumentException("Date of birth cannot be earlier than 1-Jan-1920 or later than the current date.");
             }

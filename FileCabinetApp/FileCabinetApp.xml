@@ -230,6 +230,231 @@
             <param name="dateOfBirth">The date of birth.</param>
             <returns>The array of records with the same date of birth.</returns>
         </member>
+        <member name="T:FileCabinetApp.InputValidation.CustomInputValidator">
+            <summary>
+            <inheritdoc cref="T:FileCabinetApp.InputValidation.IInputValidator"/>
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.NameConverter(System.String)">
+            <summary>
+            Converts name.
+            </summary>
+            <param name="nameInput">Name input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.DateConverter(System.String)">
+            <summary>
+            Converts date of birth from string to DateTime.
+            </summary>
+            <param name="dateInput">Date of birth input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.AreaCodeConverter(System.String)">
+            <summary>
+            Converts area code from string to short.
+            </summary>
+            <param name="areCodeInput">Area code input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.SavingsConverter(System.String)">
+            <summary>
+            Converts savings from string to decimal.
+            </summary>
+            <param name="savingsInput">Amount of savings input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.GenderConverter(System.String)">
+            <summary>
+            Converts gender from string to char.
+            </summary>
+            <param name="genderInput">Gender input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.NameValidator(System.String)">
+            <summary>
+            Validated converted name.
+            </summary>
+            <param name="nameInput">Converted name input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.DateValidator(System.DateTime)">
+            <summary>
+            Validates converted date of birth.
+            </summary>
+            <param name="dateInput">Converted date of birth input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.AreaCodeValidator(System.Int16)">
+            <summary>
+            Validates converted area code.
+            </summary>
+            <param name="areCodeInput">Converted area code input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.SavingsValidator(System.Decimal)">
+            <summary>
+            Validates converted savings.
+            </summary>
+            <param name="savingsInput">Converted savings input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.CustomInputValidator.GenderValidator(System.Char)">
+            <summary>
+            Validates converted gender.
+            </summary>
+            <param name="genderInput">Converted gender input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="T:FileCabinetApp.InputValidation.DefaultInputValidator">
+            <summary>
+            <inheritdoc cref="T:FileCabinetApp.InputValidation.IInputValidator"/>
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.NameConverter(System.String)">
+            <summary>
+            Converts name.
+            </summary>
+            <param name="nameInput">Name input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.DateConverter(System.String)">
+            <summary>
+            Converts date of birth from string to DateTime.
+            </summary>
+            <param name="dateInput">Date of birth input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.AreaCodeConverter(System.String)">
+            <summary>
+            Converts area code from string to short.
+            </summary>
+            <param name="areCodeInput">Area code input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.SavingsConverter(System.String)">
+            <summary>
+            Converts savings from string to decimal.
+            </summary>
+            <param name="savingsInput">Amount of savings input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.GenderConverter(System.String)">
+            <summary>
+            Converts gender from string to char.
+            </summary>
+            <param name="genderInput">Gender input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.NameValidator(System.String)">
+            <summary>
+            Validated converted name.
+            </summary>
+            <param name="nameInput">Converted name input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.DateValidator(System.DateTime)">
+            <summary>
+            Validates converted date of birth.
+            </summary>
+            <param name="dateInput">Converted date of birth input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.AreaCodeValidator(System.Int16)">
+            <summary>
+            Validates converted area code.
+            </summary>
+            <param name="areCodeInput">Converted area code input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.SavingsValidator(System.Decimal)">
+            <summary>
+            Validates converted savings.
+            </summary>
+            <param name="savingsInput">Converted savings input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.DefaultInputValidator.GenderValidator(System.Char)">
+            <summary>
+            Validates converted gender.
+            </summary>
+            <param name="genderInput">Converted gender input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="T:FileCabinetApp.InputValidation.IInputValidator">
+            <summary>
+            Declares validation methods for input data.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.NameConverter(System.String)">
+            <summary>
+            Converts name.
+            </summary>
+            <param name="nameInput">Name input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.DateConverter(System.String)">
+            <summary>
+            Converts date of birth from string to DateTime.
+            </summary>
+            <param name="dateInput">Date of birth input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.AreaCodeConverter(System.String)">
+            <summary>
+            Converts area code from string to short.
+            </summary>
+            <param name="areCodeInput">Area code input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.SavingsConverter(System.String)">
+            <summary>
+            Converts savings from string to decimal.
+            </summary>
+            <param name="savingsInput">Amount of savings input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.GenderConverter(System.String)">
+            <summary>
+            Converts gender from string to char.
+            </summary>
+            <param name="genderInput">Gender input.</param>
+            <returns>Information about conversion - true/false, message, result of the conversion.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.NameValidator(System.String)">
+            <summary>
+            Validated converted name.
+            </summary>
+            <param name="nameInput">Converted name input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.DateValidator(System.DateTime)">
+            <summary>
+            Validates converted date of birth.
+            </summary>
+            <param name="dateInput">Converted date of birth input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.AreaCodeValidator(System.Int16)">
+            <summary>
+            Validates converted area code.
+            </summary>
+            <param name="areCodeInput">Converted area code input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.SavingsValidator(System.Decimal)">
+            <summary>
+            Validates converted savings.
+            </summary>
+            <param name="savingsInput">Converted savings input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
+        <member name="M:FileCabinetApp.InputValidation.IInputValidator.GenderValidator(System.Char)">
+            <summary>
+            Validates converted gender.
+            </summary>
+            <param name="genderInput">Converted gender input.</param>
+            <returns>Information about validation - true/false, message.</returns>
+        </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
             Declares a validation method for record's data.

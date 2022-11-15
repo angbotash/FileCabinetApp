@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Globalization;
+using FileCabinetApp.InputValidation;
 
 #pragma warning disable CA1309 // Use ordinal string comparison
 
@@ -15,18 +16,14 @@ namespace FileCabinetApp
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
-        private const int MinNameLength = 2;
-        private const int MaxNameLength = 60;
-        private const char GenderFemale = 'F';
-        private const char GenderMale = 'M';
-        private const char GenderNotSpecified = 'N';
         private const string DateTimeFormat = "M/d/yyyy";
-        private const string ValidationLong = "--validation-rules";
+        private const string ValidationLong = "--inputValidation-rules";
         private const string ValidationShort = "-v";
         private const string ValidationCustomRule = "CUSTOM";
         private const string ValidationDefaultRule = "DEFAULT";
 
-        private static IFileCabinetService fileCabinetService;
+        private static IFileCabinetService fileCabinetService = new FileCabinetDefaultService();
+        private static IInputValidator inputValidation = new DefaultInputValidator();
 
         private static bool isRunning = true;
 
@@ -69,7 +66,7 @@ namespace FileCabinetApp
 
             if (string.IsNullOrEmpty(validationRuleMessage) || string.IsNullOrEmpty(validationRule))
             {
-                Console.WriteLine("The validation rule is not recognized.");
+                Console.WriteLine("The inputValidation rule is not recognized.");
                 return;
             }
 
@@ -79,9 +76,11 @@ namespace FileCabinetApp
             Console.WriteLine(HintMessage);
             Console.WriteLine();
 
-            fileCabinetService = validationRule == ValidationCustomRule
-                ? new FileCabinetCustomService()
-                : new FileCabinetDefaultService();
+            if (validationRule == ValidationCustomRule)
+            {
+                fileCabinetService = new FileCabinetCustomService();
+                inputValidation = new CustomInputValidator();
+            }
 
             do
             {
@@ -161,12 +160,23 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            var firstName = CheckFirstNameInput();
-            var lastName = CheckLastNameInput();
-            var dateOfBirth = CheckDateOfBirthInput();
-            var areaCode = CheckAreaCodeInput();
-            var savings = CheckSavingsInput();
-            var gender = CheckGenderInput();
+            Console.Write("First name: ");
+            var firstName = ReadInput(inputValidation.NameConverter, inputValidation.NameValidator);
+
+            Console.Write("Last name: ");
+            var lastName = ReadInput(inputValidation.NameConverter, inputValidation.NameValidator);
+
+            Console.Write("Date of birth: ");
+            var dateOfBirth = ReadInput(inputValidation.DateConverter, inputValidation.DateValidator);
+
+            Console.Write("Area code: ");
+            var areaCode = ReadInput(inputValidation.AreaCodeConverter, inputValidation.AreaCodeValidator);
+
+            Console.Write("Amount of savings: ");
+            var savings = ReadInput(inputValidation.SavingsConverter, inputValidation.SavingsValidator);
+
+            Console.Write("Gender: ");
+            var gender = ReadInput(inputValidation.GenderConverter, inputValidation.GenderValidator);
 
             var recordData = new RecordDataArgs(firstName, lastName, dateOfBirth, areaCode, savings, gender);
 
@@ -194,12 +204,23 @@ namespace FileCabinetApp
                     return;
                 }
 
-                var firstName = CheckFirstNameInput();
-                var lastName = CheckLastNameInput();
-                var dateOfBirth = CheckDateOfBirthInput();
-                var areaCode = CheckAreaCodeInput();
-                var savings = CheckSavingsInput();
-                var gender = CheckGenderInput();
+                Console.Write("First name: ");
+                var firstName = ReadInput(inputValidation.NameConverter, inputValidation.NameValidator);
+
+                Console.Write("Last name: ");
+                var lastName = ReadInput(inputValidation.NameConverter, inputValidation.NameValidator);
+
+                Console.Write("Date of birth: ");
+                var dateOfBirth = ReadInput(inputValidation.DateConverter, inputValidation.DateValidator);
+
+                Console.Write("Area code: ");
+                var areaCode = ReadInput(inputValidation.AreaCodeConverter, inputValidation.AreaCodeValidator);
+
+                Console.Write("Amount of savings: ");
+                var savings = ReadInput(inputValidation.SavingsConverter, inputValidation.SavingsValidator);
+
+                Console.Write("Gender: ");
+                var gender = ReadInput(inputValidation.GenderConverter, inputValidation.GenderValidator);
 
                 var recordData = new RecordDataArgs(firstName, lastName, dateOfBirth, areaCode, savings, gender);
 
@@ -254,168 +275,14 @@ namespace FileCabinetApp
             }
         }
 
-        // User input check methods
-        private static string CheckFirstNameInput()
-        {
-            string? firstName;
-
-            do
-            {
-                Console.Write("First name: ");
-                firstName = Console.ReadLine();
-
-                if (string.IsNullOrWhiteSpace(firstName))
-                {
-                    Console.WriteLine("Please enter a first name.");
-                }
-                else if (firstName.Length < MinNameLength || firstName.Length > MaxNameLength)
-                {
-                    Console.WriteLine("The first name should be 2-60 characters long.");
-                }
-            }
-            while (string.IsNullOrWhiteSpace(firstName) || (firstName.Length < MinNameLength || firstName.Length > MaxNameLength));
-
-            return firstName;
-        }
-
-        private static string CheckLastNameInput()
-        {
-            string? lastName;
-
-            do
-            {
-                Console.Write("Last name: ");
-                lastName = Console.ReadLine();
-
-                if (string.IsNullOrWhiteSpace(lastName))
-                {
-                    Console.WriteLine("Please enter a last name.");
-                }
-                else if (lastName.Length < MinNameLength || lastName.Length > MaxNameLength)
-                {
-                    Console.WriteLine("The last name should be 2-60 characters long.");
-                }
-            }
-            while (string.IsNullOrWhiteSpace(lastName) || (lastName.Length < MinNameLength || lastName.Length > MaxNameLength));
-
-            return lastName;
-        }
-
-        private static DateTime CheckDateOfBirthInput()
-        {
-            DateTime dateOfBirth;
-            bool correctDateFormat;
-
-            do
-            {
-                Console.Write("Date of birth: ");
-                var dateOfBirthString = Console.ReadLine();
-                correctDateFormat = DateTime.TryParseExact(dateOfBirthString, DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateOfBirth);
-
-                if (correctDateFormat && (dateOfBirth < new DateTime(1950, 1, 1) || dateOfBirth > DateTime.Today))
-                {
-                    correctDateFormat = false;
-                    Console.WriteLine("The date of birth cannot be earlier than 1-Jan-1950 or later than the current date.");
-                }
-                else if (!correctDateFormat)
-                {
-                    Console.WriteLine("Please enter the date of birth in the correct format. Ex.: mm/dd/yyyy - 01/01/1973");
-                }
-            }
-            while (!correctDateFormat);
-
-            return dateOfBirth;
-        }
-
-        private static short CheckAreaCodeInput()
-        {
-            short areaCode;
-            bool correctAreCodeFormat;
-
-            do
-            {
-                Console.Write("Area code: ");
-                var areaCodeString = Console.ReadLine();
-                correctAreCodeFormat = short.TryParse(areaCodeString, out areaCode);
-
-                if (correctAreCodeFormat && areaCode < 0)
-                {
-                    correctAreCodeFormat = false;
-                    Console.WriteLine("The area code cannot be a negative number.");
-                }
-                else if (!correctAreCodeFormat)
-                {
-                    Console.WriteLine("Please enter an area code.");
-                }
-            }
-            while (!correctAreCodeFormat);
-
-            return areaCode;
-        }
-
-        private static decimal CheckSavingsInput()
-        {
-            decimal savings;
-            bool correctSavingsFormat;
-
-            do
-            {
-                Console.Write("Amount of savings: ");
-                var savingsString = Console.ReadLine();
-                correctSavingsFormat = decimal.TryParse(savingsString, out savings);
-
-                if (correctSavingsFormat && savings < 0)
-                {
-                    correctSavingsFormat = false;
-                    Console.WriteLine("The amount of savings cannot be a negative number.");
-                }
-                else if (!correctSavingsFormat)
-                {
-                    Console.WriteLine("Please enter an amount of savings.");
-                }
-            }
-            while (!correctSavingsFormat);
-
-            return savings;
-        }
-
-        private static char CheckGenderInput()
-        {
-            char gender;
-            bool correctGenderFormat;
-
-            do
-            {
-                Console.Write("Gender: ");
-                var genderString = Console.ReadLine();
-                correctGenderFormat = char.TryParse(genderString, out gender);
-
-                if (correctGenderFormat)
-                {
-                    if (gender != GenderFemale && gender != GenderMale && gender != GenderNotSpecified)
-                    {
-                        correctGenderFormat = false;
-                        Console.WriteLine("The gender can only be F, M or N.");
-                    }
-                }
-                else if (!correctGenderFormat)
-                {
-                    Console.WriteLine("Please enter the gender in a correct format. Ex: 'F' - female, 'M' - male or 'N' - not specified.");
-                }
-            }
-            while (!correctGenderFormat);
-
-            return gender;
-        }
-
-        // Validation input check
+        // Validation rule input check
         private static string GetValidationRuleMessage(string[] args)
         {
             var ruleMessage = string.Empty;
 
             if (args.Length == 0)
             {
-                ruleMessage = "Using default validation rules.";
+                ruleMessage = "Using default inputValidation rules.";
                 return ruleMessage;
             }
 
@@ -424,10 +291,10 @@ namespace FileCabinetApp
             switch (rule)
             {
              case ValidationDefaultRule:
-                 ruleMessage = "Using default validation rules.";
+                 ruleMessage = "Using default inputValidation rules.";
                  return ruleMessage;
              case ValidationCustomRule:
-                 ruleMessage = "Using custom validation rules.";
+                 ruleMessage = "Using custom inputValidation rules.";
                  return ruleMessage;
              default:
                  return ruleMessage;
@@ -511,6 +378,37 @@ namespace FileCabinetApp
                     recordData = searchData[1];
                 }
             }
+        }
+
+        // Input validation
+        private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
+        {
+            do
+            {
+                T value;
+
+                var input = Console.ReadLine();
+                var conversionResult = converter(input);
+
+                if (!conversionResult.Item1)
+                {
+                    Console.WriteLine($"Conversion failed: {conversionResult.Item2} Please, correct your input.");
+                    continue;
+                }
+
+                value = conversionResult.Item3;
+
+                var validationResult = validator(value);
+
+                if (!validationResult.Item1)
+                {
+                    Console.WriteLine($"Validation failed: {validationResult.Item2} Please, correct your input.");
+                    continue;
+                }
+
+                return value;
+            }
+            while (true);
         }
     }
 }
