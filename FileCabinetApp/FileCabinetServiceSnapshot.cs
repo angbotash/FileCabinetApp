@@ -1,4 +1,6 @@
-﻿namespace FileCabinetApp
+﻿using System.Xml;
+
+namespace FileCabinetApp
 {
     /// <summary>
     /// Snapshot class for <see cref="FileCabinetService"/>.
@@ -28,6 +30,32 @@
             {
                 csvWriter.Write(record);
             }
+        }
+
+        /// <summary>
+        /// Saves records to a XML file through <see cref="FileCabinetRecordXmlWriter.Write"/>.
+        /// </summary>
+        /// <param name="writer">StreamWriter instance.</param>
+        public void SaveToXml(StreamWriter writer)
+        {
+            var xmlWriterSettings = new XmlWriterSettings()
+            {
+                Indent = true,
+                IndentChars = "\t",
+            };
+
+            var writerXml = XmlWriter.Create(writer, xmlWriterSettings);
+            var xmlWriter = new FileCabinetRecordXmlWriter(writerXml);
+
+            writerXml.WriteStartElement("records");
+
+            foreach (var record in this.records)
+            {
+                xmlWriter.Write(record);
+            }
+
+            writerXml.WriteEndElement();
+            writerXml.Close();
         }
     }
 }

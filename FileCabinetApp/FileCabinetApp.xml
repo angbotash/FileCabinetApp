@@ -121,6 +121,24 @@
             <param name="record">A record.</param>
             <exception cref="T:System.ArgumentNullException">Thrown if the record is null.</exception>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
+            <summary>
+            This class declares a method that writes a record from stream to a XML file.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.#ctor(System.Xml.XmlWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlWriter"/> class.
+            </summary>
+            <param name="writer">Stream writer.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.Write(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Serializes a record into a XML file.
+            </summary>
+            <param name="record">A record.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the record is null.</exception>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetService">
             <summary>
             <inheritdoc cref="T:FileCabinetApp.IFileCabinetService"/>
@@ -209,6 +227,12 @@
         <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
             <summary>
             Saves records to a CSV file through <see cref="M:FileCabinetApp.FileCabinetRecordCsvWriter.Write(FileCabinetApp.FileCabinetRecord)"/>.
+            </summary>
+            <param name="writer">StreamWriter instance.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToXml(System.IO.StreamWriter)">
+            <summary>
+            Saves records to a XML file through <see cref="M:FileCabinetApp.FileCabinetRecordXmlWriter.Write(FileCabinetApp.FileCabinetRecord)"/>.
             </summary>
             <param name="writer">StreamWriter instance.</param>
         </member>

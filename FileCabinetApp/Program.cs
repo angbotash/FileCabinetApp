@@ -279,9 +279,9 @@ namespace FileCabinetApp
 
         private static void Export(string parameters)
         {
-            GetExportData(parameters, out var exportCategory, out var filePath);
+            GetExportData(parameters, out var fileType, out var filePath);
 
-            if (string.IsNullOrWhiteSpace(exportCategory) || string.IsNullOrWhiteSpace(filePath))
+            if (string.IsNullOrWhiteSpace(fileType) || string.IsNullOrWhiteSpace(filePath))
             {
                 Console.WriteLine("Please enter a file type and a file name.");
                 return;
@@ -296,7 +296,7 @@ namespace FileCabinetApp
                 switch (yesOrNo)
                 {
                     case true:
-                        ExportToCsv(filePath);
+                        ExportToFile(fileType, filePath);
                         break;
 
                     case false:
@@ -305,16 +305,19 @@ namespace FileCabinetApp
             }
             else
             {
-                ExportToCsv(filePath);
+                ExportToFile(fileType, filePath);
             }
         }
 
-        private static void ExportToCsv(string filePath)
+        private static void ExportToFile(string fileType, string filePath)
         {
             try
             {
-                FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-                stream.Close();
+                if (File.Exists(filePath))
+                {
+                    FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                    stream.Close();
+                }
             }
             catch (IOException)
             {
@@ -322,11 +325,28 @@ namespace FileCabinetApp
                 return;
             }
 
-            var writer = new StreamWriter(filePath);
-            var snapshot = fileCabinetService.MakeSnapshot();
+            switch (fileType)
+            {
+                case "CSV":
+                    var writerCsv = new StreamWriter(filePath);
+                    var snapshotCsv = fileCabinetService.MakeSnapshot();
 
-            snapshot.SaveToCsv(writer);
-            writer.Close();
+                    snapshotCsv.SaveToCsv(writerCsv);
+                    writerCsv.Close();
+                    break;
+
+                case "XML":
+                    var writer = new StreamWriter(filePath);
+                    var snapshot = fileCabinetService.MakeSnapshot();
+
+                    snapshot.SaveToXml(writer);
+                    writer.Close();
+                    break;
+
+                default:
+                    Console.WriteLine($"{fileType} format is not supported.");
+                    return;
+            }
 
             Console.WriteLine($"All records are exported to file {filePath}.");
         }
